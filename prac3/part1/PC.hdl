@@ -22,5 +22,4 @@ CHIP PC {
     Mux16(a=loadmuxout, b=false, sel=reset, out=resetmuxout);
     Mux16(a=incmuxout, b=in, sel=load, out=loadmuxout);
     Mux16(a=regout, b=incout, sel=inc, out=incmuxout);
-
 }
