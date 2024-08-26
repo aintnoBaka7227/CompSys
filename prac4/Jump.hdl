@@ -28,5 +28,16 @@ CHIP Jump {
 
 PARTS:
     // Put your code here:
-    
+    // zr = 0 and ng = 0 
+    Or(a=zr, b=ng, out=lteq);
+    Not(in=lteq, out=posp);
+    // out < 0 j1 = 1 and ng = 1
+    And(a=j1, b=ng, out=jeq);
+    // out = 0 j2 = 1 and zr = 1
+    And(a=j2, b=zr, out=jlg); 
+    // out > 0 zr = 0 and ng = 0 and j3 = 1
+    And(a=posp, b=j3, out=jgt);
+    // combine
+    Or(a=jeq, b=jlg, out=jle);
+    Or(a=jle, b=jgt, out=jump);
 }

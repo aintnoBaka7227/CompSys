@@ -26,4 +26,8 @@ CHIP Decode {
 
 PARTS:
     // Put your code here:
+    // msb = 0 a instruction else c instruction
+    Not(in=in[15], out=ainstruction, out=type);
+    Not(in=ainstruction, out=cinstruction, out=type);
+    // 
 }
