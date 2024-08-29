@@ -40,8 +40,35 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
-    Decode(in=instruction, type=)
-
+    Decode(in=instruction, type=type, a=a, c1=c1, c2=c2, c3=c3, c4=c4, c5=c5, c6=c6, d1=d1, d2=d2, d3=d3, j1=j1, j2=j2, j3=j3);
+    // check if c instr, d1 = 1
+    And(a=type, b=d1, out=ALUtoA);
+    // check if input for A register will be a instruction or from alu    
+    Mux16(a=instruction, b=outALU, sel=ALUtoA, out=inA);
+    // invert signal to check if A instruct
+    Not(in=type, out=nottype);
+    // load signal for A register
+    Or(a=nottype, b=ALUtoA, out=loadA);
+    // load A register 
+    ARegister(in=inA, load=loadA, out=outA);
+    // select A or M based on a
+    Mux16(a=outA, b=inM, sel=a, out=outAM); 
+    // load d register based on d2 from alu
+    DRegister(in=outALU, load=d2, out=outD);
+    // alu
+    ALU(x=outD, y=outAM, zx=c1, nx=c2, zy=c3, ny=c4, f=c5, no=c6, out=outALU, zr=zr, ng=ng);
+    // memory address M[A]
+    Or16(a=false, b=outA, out[0..14]=addressM);
+    // alu output -> input to ram
+    Or16(a=false, b=outALU, out=outM);
+    // load signal for ram
+    And(a=type, b=d3, out=writeM);
     // jump logic
-    
+    Jump(j1=j1, j2=j2, j3=j3, zr=zr, ng=ng, jump=jump);
+    // only jump if c instruction
+    And(a=type, b=jump, out=PCload);
+    // inc if not
+    Not(in=PCload, out=PCinc);
+    // program counter
+    PC(in=outA, inc=PCinc, load=PCload, reset=reset, out[0..14]=pc);
 }
