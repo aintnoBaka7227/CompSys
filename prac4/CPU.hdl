@@ -40,4 +40,8 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Decode(in=instruction, type=)
+
+    // jump logic
+    
 }

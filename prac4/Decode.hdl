@@ -26,8 +26,29 @@ CHIP Decode {
 
 PARTS:
     // Put your code here:
-    // msb = 0 a instruction else c instruction
-    Not(in=in[15], out=ainstruction, out=type);
-    Not(in=ainstruction, out=cinstruction, out=type);
-    // 
+    Not(in=in[15], out=insa);    
+    Not(in=insa, out=type);
+    Mux(a=in[12], b=false, sel=insa, out=a);
+    // Decode ALU control signals (c1 to c6)
+    // For C-instruction use [11], [10], [9], [8], [7], [6]; for A-instruction use false
+    Mux(a=in[11], b=false, sel=insa, out=c1); 
+    Mux(a=in[10], b=false, sel=insa, out=c2); 
+    Mux(a=in[9],  b=false, sel=insa, out=c3); 
+    Mux(a=in[8],  b=false, sel=insa, out=c4); 
+    Mux(a=in[7],  b=false, sel=insa, out=c5); 
+    Mux(a=in[6],  b=false, sel=insa, out=c6); 
+
+    // Decode destination control signals (d1 to d3)
+    // For A-instruction, d1 is 1; for C-instruction, use in[5]
+    // For A-instruction, d2 is 0; for C-instruction, use in[4]
+    // For A-instruction, d3 is 0; for C-instruction, use in[3]
+    Mux(a=in[5], b=true, sel=insa, out=d1); 
+    Mux(a=in[4], b=false, sel=insa, out=d2); 
+    Mux(a=in[3], b=false, sel=insa, out=d3); 
+
+    // Decode jump control signals (j1 to j3)
+    // For C-instruction, use in[2], [1], [0]; for A-instruction, use false
+    Mux(a=in[2], b=false, sel=insa, out=j1); 
+    Mux(a=in[1], b=false, sel=insa, out=j2); 
+    Mux(a=in[0], b=false, sel=insa, out=j3); 
 }
