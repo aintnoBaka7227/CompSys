@@ -41,14 +41,12 @@ CHIP CPU {
     PARTS:
     // Put your code here:
     Decode(in=instruction, type=type, a=a, c1=c1, c2=c2, c3=c3, c4=c4, c5=c5, c6=c6, d1=d1, d2=d2, d3=d3, j1=j1, j2=j2, j3=j3);
-    // check if c instr, d1 = 1
-    And(a=type, b=d1, out=ALUtoA);
     // check if input for A register will be a instruction or from alu    
-    Mux16(a=instruction, b=outALU, sel=ALUtoA, out=inA);
+    Mux16(a=instruction, b=outALU, sel=type, out=inA);
     // invert signal to check if A instruct
     Not(in=type, out=nottype);
     // load signal for A register
-    Or(a=nottype, b=ALUtoA, out=loadA);
+    Or(a=nottype, b=d1, out=loadA);
     // load A register 
     ARegister(in=inA, load=loadA, out=outA);
     // select A or M based on a
