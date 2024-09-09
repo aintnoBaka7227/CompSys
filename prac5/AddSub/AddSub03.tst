@@ -1,4 +1,4 @@
-// This is test file 02 for AddSub.asm
+// This is test file 03 for AddSub.asm
 // We will check a case where negative numbers, 0 and positive numbers are involved 
 // In this test case, set RAM[1] to 300, RAM[2] to -1, RAM[3] is set to 0
 // Expected output is 299 and is stored in RAM[0]

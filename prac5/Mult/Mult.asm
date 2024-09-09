@@ -19,6 +19,8 @@
     M=1
     @NEGATIVE
     D;JLT
+    @ZERO
+    D;JEQ
     @LOOP
     D;JGE
 (NEGATIVE)
@@ -57,6 +59,9 @@
     D=-M
     @0
     M=D
+(ZERO)
+    @0
+    M=0
 (END)
     @END
     0;JMP
