@@ -59,6 +59,8 @@
     D=-M
     @0
     M=D
+    @END
+    0;JMP
 (ZERO)
     @0
     M=0
