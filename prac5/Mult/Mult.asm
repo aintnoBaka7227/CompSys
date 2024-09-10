@@ -27,7 +27,8 @@
     @3
     M=-1
     @2
-    M=-M
+    M=!M
+    M=M+1
 (LOOP)
     @i
     D=M
@@ -56,7 +57,9 @@
     D;JGE
 (NEGATION)
     @1
-    D=-M
+    D=M
+    D=!D
+    D=D+1
     @0
     M=D
     @END

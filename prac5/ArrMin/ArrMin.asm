@@ -35,7 +35,7 @@ M=1
     @3
     D=M
     @0
-    M=D
+    M=D 
     @i 
     M=M+1
     @LOOP
