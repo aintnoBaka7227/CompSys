@@ -2,13 +2,13 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
-@1
-A=M 
-D=M
-@0
-M=D
-@i
-M=1
+    @1
+    A=M 
+    D=M
+    @0
+    M=D
+    @i
+    M=1
 (LOOP)
     @i 
     D=M 
@@ -22,11 +22,25 @@ M=1
     A=D+M
     D=M
     @3
-    M=D 
+    M=D
+    @POSITIVEANDNEGATIVE
+    D;JLT 
     @0
-    D=D-M
+    D=M-D
     @UPDATE_MIN
-    D;JLT
+    D;JGT
+    @i 
+    M=M+1
+    @LOOP
+    0;JMP
+(POSITIVEANDNEGATIVE)
+    @0
+    D=M
+    @UPDATE_MIN
+    D;JGE
+    D=M-D
+    @UPDATE_MIN
+    D;JGT
     @i 
     M=M+1
     @LOOP
