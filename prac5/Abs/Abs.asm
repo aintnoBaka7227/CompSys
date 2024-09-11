@@ -2,17 +2,17 @@
 // (R0, R1 refer to RAM[0], and RAM[1], respectively.)
 
 // Put your code here.
-    @1
+    @R1
     D=M
     @NEGATIVE
     D;JLT
-    @0
+    @R0
     M=D
     @END
     D;JGE
 (NEGATIVE)
     D=-D
-    @0
+    @R0
     M=D
 (END)
     @END
