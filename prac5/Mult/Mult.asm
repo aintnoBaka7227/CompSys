@@ -7,8 +7,6 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
-@counter
-M=1
 @R2
 D=M
 // check if R2 = 0 then set R0 to 0
@@ -20,21 +18,19 @@ D;JGT
 // if not then negate R2
 D=!D
 D=D+1
+(POSITIVE)
 @i
 M=D
-(POSITIVE)
-// loop start from 0, end when i = R2
+// loop start from R2, end when i = 0
 (LOOP)
 @R1
 D=M
 @R0
 M=M+D
-@counter
-MD=M+1
 @i
-D=D-M
+MD=M-1
 @LOOP
-D;JLE
+D;JGT
 
 // check again for R2 if it is negative then negate R0
 @R2
