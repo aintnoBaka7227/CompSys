@@ -2,6 +2,8 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 
 // Put your code here.
+// going backward
+// not sure why going forward lead to failure in edge cases (same implementation as in lecture)
 // Check if R1 holds a valid address
     @R1
     D=M 
@@ -16,7 +18,6 @@
     D=M
     @END
     D;JLE
-
 // set array[1] as min in R[0] 
     @R1
     A=M 
@@ -71,10 +72,8 @@
     @R2
     M=M-1
     D=M-1
-
     @LOOP
-    D;JGT
-    
+    D;JGT  
 (END)
     @END
     0;JMP
