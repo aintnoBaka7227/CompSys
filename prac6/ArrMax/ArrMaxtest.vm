@@ -3,25 +3,26 @@
 
 // Put your code here.
 // define function 
-function ArrMax.arrMax 7 
+//function ArrMax.arrMax 7 
 // return 0 if arr length <= 0
 push constant 1
 push argument 1
 gt 
 if-goto ERROR
 
-// sufficient length 
+// sufficient length
+
+// counter
+push constant 0
+pop local 4 
 
 // get the first array location 
 push argument 0
 pop pointer 1
+
 // set first value as max and store in local 
 push that 0 
 pop local 5
-
-// counter
-push constant 0
-pop local 4
 
 // loop 
 label LOOP 
@@ -46,7 +47,6 @@ push that 0
 // assign current value to local 6 
 pop local 6 
 
-// compare
 push local 5 
 push local 6
 gt
@@ -68,6 +68,7 @@ return
 label ERROR 
 push constant 0
 return 
+
 
 
 
