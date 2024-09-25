@@ -24,12 +24,15 @@ pop pointer 1
 push that 0 
 pop local 5
 
+// loop 
 label LOOP 
+// counter for element accessing
 push local 4 
 push constant 1
 add 
 pop local 4 
 
+// check if counter go out of bound
 push argument 1
 push local 4 
 eq
@@ -57,6 +60,7 @@ pop local 5
 label SKIP 
 goto LOOP  
 
+// return max value 
 label RETURN 
 push local 5
 return 

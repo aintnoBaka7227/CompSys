@@ -113,17 +113,17 @@ label NEGATION
 // no negation if non or both x and y is negative 
 push constant 0
 push static 0
-lt  
+lt 
+if-goto NEGATION2 
+push local 0
+neg 
+pop local 0 
+
+label NEGATION2 
 push constant 0
 push static 1
 lt 
-add 
-push constant 1 
-eq 
-if-goto NEGATE 
-goto END 
-
-label NEGATE 
+if-goto END 
 push local 0 
 neg 
 pop local 0
