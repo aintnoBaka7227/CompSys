@@ -3,7 +3,20 @@
 
 // Put your code here.
 
+push static 0
+push constant 0
+lt 
+if-goto LESSTHAN
 
+push static 0
+pop static 1
+goto END 
+
+
+label LESSTHAN
+push static 0
+neg 
+pop static 1
 
 label END
 goto END

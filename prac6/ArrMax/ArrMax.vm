@@ -2,4 +2,70 @@
 // a & b are both supplied as arguments
 
 // Put your code here.
+// define function 
+function ArrMax.arrMax 7 
+// return 0 if arr length <= 0
+push constant 1
+push argument 1
+gt 
+if-goto ERROR
+
+// sufficient length
+
+// counter
+push constant 0
+pop local 4 
+
+// get the first array location 
+push argument 0
+pop pointer 1
+
+// set first value as max and store in local 
+push that 0 
+pop local 5
+
+label LOOP 
+push local 4 
+push constant 1
+add 
+pop local 4 
+
+push argument 1
+push local 4 
+eq
+if-goto RETURN 
+
+push argument 0
+push local 4 
+add 
+pop pointer 1 
+
+push that 0 
+// assign current value to local 6 
+pop local 6 
+
+push local 5 
+push local 6
+gt
+// if current value is smaller go to skip  
+if-goto SKIP
+// else switch  
+push local 6 
+pop local 5  
+
+// no switch, checking counter for loop 
+label SKIP 
+goto LOOP  
+
+label RETURN 
+push local 5
+return 
+
+label ERROR 
+push constant 0
+return 
+
+
+
+
 

@@ -1,0 +1,19 @@
+// negate value in local 0 if needed 
+label NEGATION 
+// no negation if non or both x and y is negative 
+push constant 0
+push static 0
+lt 
+if-goto NEGATION2 
+push local 0
+neg 
+pop local 0 
+
+label NEGATION2 
+push constant 0
+push static 1
+lt 
+if-goto END 
+push local 0 
+neg 
+pop local 0

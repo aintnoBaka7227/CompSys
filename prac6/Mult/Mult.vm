@@ -4,7 +4,129 @@
 
 // Put your code here.
 
+// check for case x==0 || y==0
+push constant 0
+pop local 0
 
+push constant 0
+push static 0
+eq 
+if-goto END 
+
+push constant 0
+push static 1
+eq 
+if-goto END
+
+// for prac 5, i did not check the min value between abs x and y to reduce number of loops
+// this time, to minimize the time, i will use the smaller value as counter for loop
+
+// get the absolute value for x 
+push static 0
+push constant 0
+lt 
+if-goto LESSTHAN1
+
+push static 0
+pop static 4
+goto ABSX 
+
+
+label LESSTHAN1
+push static 0
+neg 
+pop static 4
+
+
+label ABSX 
+
+// get absolute value for y 
+push static 1
+push constant 0
+lt 
+if-goto LESSTHAN2
+
+push static 1
+pop static 5
+goto ABSY 
+
+
+label LESSTHAN2
+push static 1
+neg 
+pop static 5
+
+label ABSY 
+
+// if y is min 
+push static 4
+push static 5  
+lt 
+if-goto COUNTX  // if not then x is min, jump to where I handle x min
+
+// increment x itself y times and update value in local 0 each time
+// save y in static 2 as counter
+push static 5
+pop static 2
+
+label LOOPY 
+push static 4
+push local 0
+add 
+pop local 0 
+
+push static 2
+push constant 1
+sub 
+pop static 2
+
+push static 2 
+push constant 0
+gt 
+if-goto LOOPY 
+goto NEGATION 
+
+label COUNTX 
+// increment y x times and update value in local 0 each time 
+// save x in static 4 as counter 
+push static 4 
+pop static 2 
+
+label LOOPX 
+push static 5 
+push local 0
+add
+pop local 0 
+
+push static 2 
+push constant 1
+sub  
+pop static 2 
+
+push static 2
+push constant 0 
+gt 
+if-goto LOOPX 
+
+// negate value in local 0 if needed 
+label NEGATION 
+// no negation if non or both x and y is negative 
+push constant 0
+push static 0
+lt  
+push constant 0
+push static 1
+lt 
+add 
+push constant 1 
+eq 
+if-goto NEGATE 
+goto END 
+
+label NEGATE 
+push local 0 
+neg 
+pop local 0
 
 label END
 goto END
