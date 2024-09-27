@@ -88,12 +88,12 @@ string VMTranslator::vm_pop(string segment, int offset){
     }
     // pop it into selected segment, handle stack, decrease stack pointer by one
     // r13,14,15 can be used to store selected address temporarily 
-    return_pop += "@R15\n";
+    return_pop += "@R13\n";
     return_pop += "M=D\n";
     return_pop += "@SP\n";
     return_pop += "AM=M-1\n";
     return_pop += "D=M\n";
-    return_pop += "@R15\n";
+    return_pop += "@R13\n";
     return_pop += "A=M\n";
     return_pop += "M=D";
 
