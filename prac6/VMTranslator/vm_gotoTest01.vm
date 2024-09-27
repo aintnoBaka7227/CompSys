@@ -1,0 +1,14 @@
+push constant -32768 
+pop static 1 
+
+goto END
+goto ADD 
+
+label ADD
+push static 1 
+push constant 1
+add 
+pop static 1 
+
+label END 
+goto END 

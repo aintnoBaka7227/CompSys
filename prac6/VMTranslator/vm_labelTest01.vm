@@ -1,0 +1,10 @@
+push constant 1 
+pop static 0 
+
+label TEST_LABEL1 
+push constant 1
+push static 0 
+add 
+pop static 0
+goto TEST_LABEL1 
+

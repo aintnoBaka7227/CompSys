@@ -1,0 +1,4 @@
+push constant 0
+push static 1 
+push temp 2
+push pointer 0

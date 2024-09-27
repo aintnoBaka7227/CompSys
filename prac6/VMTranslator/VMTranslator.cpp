@@ -67,10 +67,9 @@ string VMTranslator::vm_push(string segment, int offset){
 
     // handle stack , increase stack pointer by one after push
     return_push += "@SP\n";
-    return_push += "A=M\n";
+    return_push += "AM=M+1\n";
+    return_push += "A=A-1\n";
     return_push += "M=D\n";
-    return_push += "@SP\n";
-    return_push += "M=M+1";
     return return_push;
 }
 
@@ -87,7 +86,7 @@ string VMTranslator::vm_pop(string segment, int offset){
         return_pop += "D=D+A\n";
     }
     // pop it into selected segment, handle stack, decrease stack pointer by one
-    // r13,14,15 can be used to store selected address temporarily 
+    // r13 can be used to store selected address temporarily 
     return_pop += "@R13\n";
     return_pop += "M=D\n";
     return_pop += "@SP\n";
@@ -189,20 +188,22 @@ string VMTranslator::vm_function(string function_name, int n_vars){
     string return_function = "(" + function_name + ")\n";
     for (int i = 0; i < n_vars; i++) {
         return_function += "@SP\n";
-        return_function += "A=M\n";
+        return_function += "AM=M+1\n";
+        return_function += "A=A-1\n";
         return_function += "M=0\n";
-        return_function += "@SP\n";
-        return_function += "M=M+1\n";
     }
     return return_function;
 }
 
 /** Generate Hack Assembly code for a VM call operation */
 string VMTranslator::vm_call(string function_name, int n_args){
-    return "";
+    string return_call = "";
+    // 
+    return return_call;
 }
 
 /** Generate Hack Assembly code for a VM return operation */
 string VMTranslator::vm_return(){
-    return "";
+    string return_return = "";
+    return return_return;
 }
