@@ -1,7 +1,8 @@
 // Test file 4 for ArrSort.asm
-// Input 7
-// Expected output: 13 
-// local 0 is changed due to stack operations 
+// Input 23 (big positive int)
+// Expected output: 28,657
+// it failed to produce correct result as the recursive method is space costly.
+// might enough space for calculation but number of repeated steps is enourmous
 
 load,
 output-file Fib04.out,
@@ -18,7 +19,7 @@ set this 3000,     // base address of the this segment
 set that 3010,     // base address of the that segment
 
 set RAM[16] 0,  // static 0
-set RAM[17] 7,  // static 1
+set RAM[17] 23,  // static 1
 set RAM[18] 0,  // static 2
 
 set local[0] 10,  // local 0
@@ -29,7 +30,7 @@ set argument[0] 100,  // argument 0
 set argument[1] 200,  // argument 1
 set argument[2] 300;  // argument 2
 
-repeat 600 {        // Change this number to cover the number of instructions in the VM test file
+repeat 8000 {        // Change this number to cover the number of instructions in the VM test file
   vmstep;
 }
 output;

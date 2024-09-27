@@ -48,69 +48,69 @@ string VMTranslator::format(string segment, int offset) {
 
 /** Generate Hack Assembly code for a VM push operation */
 string VMTranslator::vm_push(string segment, int offset){
-    string push = "@" + format(segment, offset) + "\n";
+    string return_push = "@" + format(segment, offset) + "\n";
     // take the value and store in D register
     if (segment == "static" || segment == "constant" || segment == "pointer" || segment == "temp") {
         if (segment == "constant") {
-            push += "D=A\n";
+            return_push += "D=A\n";
         }
         else {
-            push += "D=M\n";
+            return_push += "D=M\n";
         }
     }
     else if (segment == "local" || segment == "argument" || segment == "that" || segment == "this") {
-        push += "D=M\n";
-        push += "@" + to_string(offset) + "\n";
-        push += "A=D+A\n";
-        push += "D=M\n"; 
+        return_push += "D=M\n";
+        return_push += "@" + to_string(offset) + "\n";
+        return_push += "A=D+A\n";
+        return_push += "D=M\n"; 
     }
 
     // handle stack , increase stack pointer by one after push
-    push += "@SP\n";
-    push += "A=M\n";
-    push += "M=D\n";
-    push += "@SP\n";
-    push += "M=M+1";
-    return push;
+    return_push += "@SP\n";
+    return_push += "A=M\n";
+    return_push += "M=D\n";
+    return_push += "@SP\n";
+    return_push += "M=M+1";
+    return return_push;
 }
 
 /** Generate Hack Assembly code for a VM pop operation */
 string VMTranslator::vm_pop(string segment, int offset){ 
-    string pop = "@" + format(segment, offset) + "\n";
+    string return_pop = "@" + format(segment, offset) + "\n";
     // get the address of the selected segment 
     if (segment == "static" || segment == "temp" || segment == "pointer") {
-        pop += "D=A\n";
+        return_pop += "D=A\n";
     }  
     else if (segment == "local" || segment == "argument" || segment == "this" || segment == "that") {
-        pop += "D=M\n";
-        pop += "@" + to_string(offset) + "\n";
-        pop += "D=D+A\n";
+        return_pop += "D=M\n";
+        return_pop += "@" + to_string(offset) + "\n";
+        return_pop += "D=D+A\n";
     }
     // pop it into selected segment, handle stack, decrease stack pointer by one
     // r13,14,15 can be used to store selected address temporarily 
-    pop += "@R15\n";
-    pop += "M=D\n";
-    pop += "@SP\n";
-    pop += "AM=M-1\n";
-    pop += "D=M\n";
-    pop += "@R15\n";
-    pop += "A=M\n";
-    pop += "M=D";
+    return_pop += "@R15\n";
+    return_pop += "M=D\n";
+    return_pop += "@SP\n";
+    return_pop += "AM=M-1\n";
+    return_pop += "D=M\n";
+    return_pop += "@R15\n";
+    return_pop += "A=M\n";
+    return_pop += "M=D";
 
-    return pop;
+    return return_pop;
 }
 
 /** Generate Hack Assembly code for a VM add operation */
 string VMTranslator::vm_add(){
     // decrease stack pointer down by 1
-    string add = "@SP\n";
-    add += "AM=M-1\n";
+    string return_add = "@SP\n";
+    return_add += "AM=M-1\n";
     // get the second value
-    add += "D=M\n";
+    return_add += "D=M\n";
     // add to the first value
-    add += "A=A-1\n";
-    add += "M=D+M";
-    return add;
+    return_add += "A=A-1\n";
+    return_add += "M=D+M";
+    return return_add;
 }
 
 /** Generate Hack Assembly code for a VM sub operation */
@@ -140,6 +140,11 @@ string VMTranslator::vm_lt(){
 
 /** Generate Hack Assembly code for a VM and operation */
 string VMTranslator::vm_and(){
+    string return_and = "@SP\n";
+    return_and += "AM=M-1\n";
+    return_and += "D=M\n";
+    return_and += "A=A-1\n";
+    return_and += "M=M&D";
     return "";
 }
 
@@ -150,27 +155,46 @@ string VMTranslator::vm_or(){
 
 /** Generate Hack Assembly code for a VM not operation */
 string VMTranslator::vm_not(){
-    return "";
+    string return_not = "@SP\n";
+    return_not += "A=M-1";
+    return_not += "M=!M";
+    return return_not;
 }
 
 /** Generate Hack Assembly code for a VM label operation */
 string VMTranslator::vm_label(string label){
-    return "";
+    string return_label = "(" + label + ")";
+    return return_label;
 }
 
 /** Generate Hack Assembly code for a VM goto operation */
 string VMTranslator::vm_goto(string label){
-    return "";
+    string return_goto = "@" + label + "\n";
+    return_goto += "0;JMP";
+    return return_goto;
 }
 
 /** Generate Hack Assembly code for a VM if-goto operation */
 string VMTranslator::vm_if(string label){
-    return "";
+    string return_if = "@SP\n"; 
+    return_if += "AM = M-1\n";
+    return_if += "D = M\n";
+    return_if += "@" + label + "\n";
+    return_if += "D;JNE"; 
+    return return_if;
 }
 
 /** Generate Hack Assembly code for a VM function operation */
 string VMTranslator::vm_function(string function_name, int n_vars){
-    return "";
+    string return_function = "(" + function_name + ")\n";
+    for (int i = 0; i < n_vars; i++) {
+        return_function += "@SP\n";
+        return_function += "A=M\n";
+        return_function += "M=0\n";
+        return_function += "@SP\n";
+        return_function += "M=M+1\n";
+    }
+    return return_function;
 }
 
 /** Generate Hack Assembly code for a VM call operation */
