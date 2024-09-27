@@ -145,7 +145,7 @@ string VMTranslator::vm_and(){
     return_and += "D=M\n";
     return_and += "A=A-1\n";
     return_and += "M=M&D";
-    return "";
+    return return_and;
 }
 
 /** Generate Hack Assembly code for a VM or operation */
@@ -156,7 +156,7 @@ string VMTranslator::vm_or(){
 /** Generate Hack Assembly code for a VM not operation */
 string VMTranslator::vm_not(){
     string return_not = "@SP\n";
-    return_not += "A=M-1";
+    return_not += "A=M-1\n";
     return_not += "M=!M";
     return return_not;
 }
