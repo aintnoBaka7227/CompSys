@@ -9,6 +9,7 @@ using namespace std;
  */
 VMTranslator::VMTranslator() {
     // Your code here
+    label_index = 0;
 }
 
 /**
@@ -18,18 +19,22 @@ VMTranslator::~VMTranslator() {
     // Your code here
 }
 
+// this is implemented based on mem layout
 string VMTranslator::format(string segment, int offset) {
+    // 16 -> 255
     if (segment == "static") {
-        return to_string(16 + offset);
+        return "R" + to_string(16 + offset);
     }
     else if (segment == "constant") {
         return to_string(offset);
     }
+    // 3,4
     else if (segment == "pointer") {
-        return "R" + to_string(3+offset);
+        return "R" + to_string(3 + offset);
     }
+    // 5->12
     else if (segment == "temp") {
-        return "R" + to_string(5+offset);
+        return "R" + to_string(5 + offset);
     }
     else if (segment == "argument") {
         return "ARG";
@@ -185,7 +190,7 @@ string VMTranslator::vm_if(string label){
 
 /** Generate Hack Assembly code for a VM function operation */
 string VMTranslator::vm_function(string function_name, int n_vars){
-    string return_function = "(" + function_name + ")\n";
+    string return_function = "(FUNCTION.DEF." + function_name + ")\n";
     for (int i = 0; i < n_vars; i++) {
         return_function += "@SP\n";
         return_function += "AM=M+1\n";
@@ -197,13 +202,95 @@ string VMTranslator::vm_function(string function_name, int n_vars){
 
 /** Generate Hack Assembly code for a VM call operation */
 string VMTranslator::vm_call(string function_name, int n_args){
-    string return_call = "";
-    // 
+    // generate a unique label 
+    std::string label = std::to_string(label_index);
+    label_index++;
+    // save the return address
+    std::string return_call = "@RETURN." + label +"\n";
+    return_call += "D=A\n";
+    return_call += "@SP\n";
+    return_call += "AM=M+1\n";
+    return_call += "A=A-1\n";
+    return_call += "M=D\n";
+
+    // save LCL, ARG, THIS, THAT of f
+    std::string state[4] = {"LCL", "ARG", "THIS", "THAT"};
+    for (int i = 0; i < 4; i++) {
+        return_call += "@" + state[i] + "\n";
+        return_call += "D=M\n";
+        return_call += "@SP\n";
+        return_call += "AM=M+1\n";
+        return_call += "A=A-1\n";
+        return_call += "M=D\n";
+    }
+
+    // reposition arg = sp - 5 - n_args
+    return_call += "@SP\n";
+    return_call += "D=M\n";
+    return_call += "@5\n";
+    return_call += "D=D-A\n";
+    return_call += "@" + std::to_string(n_args) + "\n";
+    return_call += "D=D-A\n";
+    return_call += "@ARG\n";
+    return_call += "M=D\n";
+
+    // reposition lcl
+    return_call += "@SP\n";
+    return_call += "D=M\n";
+    return_call += "@LCL\n";
+    return_call += "M=D\n";
+
+    // transfer control to g
+    return_call += "(FUNCTION.DEF." + function_name + ")\n";
+    return_call += "0;JMP\n";
+    
+    // generated label
+    return_call += "(@RETURN." + label + ")";
+
     return return_call;
 }
 
 /** Generate Hack Assembly code for a VM return operation */
 string VMTranslator::vm_return(){
-    string return_return = "";
+    // frame = lcl 
+    // retAddr = *(frame-5) 
+    // frame, ret Addr are temp vars  
+    std::string return_return = "@LCL\n";
+    return_return += "D=M\n";
+    return_return += "@5\n";
+    return_return += "D=D-A\n";
+    return_return += "@13\n";
+    return_return += "M=D\n";
+
+    // *arg = pop 
+    // repositions the return value 
+    // for the caller
+    return_return += "@SP\n";
+    return_return += "AM=M-1\n";
+    return_return += "D=M\n";
+    return_return += "@ARG\n";
+    return_return += "A=M\n";
+    return_return += "M=D\n";
+
+    // restore the caller's sp 
+    return_return += "D=A+1\n";
+    return_return += "@SP\n";
+    return_return += "M=D\n";
+
+    // restore the caller's that, this, arg, lcl
+    std::string state[4] = {"LCL", "ARG", "THIS", "THAT"};
+    for (int i = 3; i >= 0; i--) {
+        return_return += "@LCL\n";
+        return_return += "AM=M-1\n";
+        return_return += "D=M\n";
+        return_return += "@" + state[i] + "\n";
+        return_return += "M=D\n";
+    }
+
+    // go to retAddr
+    return_return += "@13\n";
+    return_return += "A=M\n";
+    return_return += "0;JMP";
+
     return return_return;
 }

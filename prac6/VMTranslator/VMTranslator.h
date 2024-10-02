@@ -14,6 +14,8 @@ class VMTranslator {
 
         // add function to handle reformating segments for push and pop operations
         static string format(string segment, int offset);
+        // add variable for label generator
+        static int label_index;
 
         static string vm_push(string segment, int offset);
         static string vm_pop(string segment, int offset);

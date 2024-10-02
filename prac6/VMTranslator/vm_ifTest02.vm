@@ -1,14 +1,11 @@
-push constant 3 
-pop static 0 
-push constant -1 
+push constant 0 
 pop static 1 
-push static 0 
 push static 1
-gt 
+not 
 if-goto END 
 
 push constant 0 
-pop static 0  
+pop static 1  
 
 label END 
 goto END
