@@ -24,7 +24,7 @@ int VMTranslator::label_index = 0;
 string VMTranslator::format(string segment, int offset) {
     // 16 -> 255
     if (segment == "static") {
-        return "R" + to_string(16 + offset);
+        return to_string(16 + offset);
     }
     else if (segment == "constant") {
         return to_string(offset);
@@ -127,13 +127,13 @@ string VMTranslator::vm_sub(){
     return_sub += "D=M\n";
     // sub
     return_sub += "A=A-1\n";
-    return_sub += "M=D-M";
+    return_sub += "M=M-D";
     return return_sub;
 }
 
 /** Generate Hack Assembly code for a VM neg operation */
 string VMTranslator::vm_neg(){
-    std::string return_neg = "@SP\n";
+    string return_neg = "@SP\n";
     return_neg += "A=M-1\n";
     return_neg += "M=!M\n";
     return_neg += "M=M+1";
@@ -167,7 +167,7 @@ string VMTranslator::vm_and(){
 
 /** Generate Hack Assembly code for a VM or operation */
 string VMTranslator::vm_or(){
-    std::string return_or = "@SP\n";
+    string return_or = "@SP\n";
     return_or += "AM = M-1\n";
     return_or += "D = M\n";
     return_or += "A = A-1\n";
@@ -221,10 +221,10 @@ string VMTranslator::vm_function(string function_name, int n_vars){
 /** Generate Hack Assembly code for a VM call operation */
 string VMTranslator::vm_call(string function_name, int n_args){
     // generate a unique label 
-    std::string label = std::to_string(label_index);
+    string label = std::to_string(label_index);
     label_index++;
     // save the return address
-    std::string return_call = "@RETURN." + label +"\n";
+    string return_call = "@RETURN." + label +"\n";
     return_call += "D=A\n";
     return_call += "@SP\n";
     return_call += "AM=M+1\n";
@@ -232,7 +232,7 @@ string VMTranslator::vm_call(string function_name, int n_args){
     return_call += "M=D\n";
 
     // save LCL, ARG, THIS, THAT of f
-    std::string state[4] = {"LCL", "ARG", "THIS", "THAT"};
+    string state[4] = {"LCL", "ARG", "THIS", "THAT"};
     for (int i = 0; i < 4; i++) {
         return_call += "@" + state[i] + "\n";
         return_call += "D=M\n";
@@ -273,7 +273,7 @@ string VMTranslator::vm_return(){
     // frame = lcl 
     // retAddr = *(frame-5) 
     // frame, ret Addr are temp vars  
-    std::string return_return = "@LCL\n";
+    string return_return = "@LCL\n";
     return_return += "D=M\n";
     return_return += "@5\n";
     return_return += "D=D-A\n";
@@ -296,7 +296,7 @@ string VMTranslator::vm_return(){
     return_return += "M=D\n";
 
     // restore the caller's that, this, arg, lcl
-    std::string state[4] = {"THAT", "THIS", "ARG", "LCL"};
+    string state[4] = {"THAT", "THIS", "ARG", "LCL"};
     for (int i = 0; i < 4; i++) {
         return_return += "@" + std::to_string(i+1) + "\n";
         return_return += "D=A\n";
