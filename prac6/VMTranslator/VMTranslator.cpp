@@ -295,10 +295,12 @@ string VMTranslator::vm_return(){
     return_return += "M=D\n";
 
     // restore the caller's that, this, arg, lcl
-    std::string state[4] = {"LCL", "ARG", "THIS", "THAT"};
-    for (int i = 3; i >= 0; i--) {
+    std::string state[4] = {"THAT", "THIS", "ARG", "LCL"};
+    for (int i = 0; i < 4; i++) {
+        return_return += "@" + std::to_string(i+1) + "\n";
+        return_return += "D=A\n";
         return_return += "@LCL\n";
-        return_return += "AM=M-1\n";
+        return_return += "A=M-D\n";
         return_return += "D=M\n";
         return_return += "@" + state[i] + "\n";
         return_return += "M=D\n";
