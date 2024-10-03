@@ -142,17 +142,89 @@ string VMTranslator::vm_neg(){
 
 /** Generate Hack Assembly code for a VM eq operation */
 string VMTranslator::vm_eq(){
-    return "";
+    // generate a unique label 
+    string label = std::to_string(label_index);
+    label_index++;
+    // if true return -1, false return 0 
+    string return_eq = "@SP\n";
+    return_eq += "AM=M-1\n";
+    return_eq += "D=M\n";
+    return_eq += "A=A-1\n";
+    return_eq += "D=M-D\n";
+    // not equal -> jump
+    return_eq += "@EQUAL.FALSE." + label + "\n";
+    return_eq += "D;JNE\n";
+    // equal -> set top to -1
+    return_eq += "@SP\n";
+    return_eq += "A=M-1\n";
+    return_eq += "M=-1\n";
+    return_eq += "@EQUAL.END." + label + "\n";
+    return_eq += "0;JMP\n";
+    return_eq += "(EQUAL.FALSE." + label + ")\n";
+    // not equal -> set top to 0
+    return_eq += "@SP\n";
+    return_eq += "A=M-1\n";
+    return_eq += "M=0\n";
+    return_eq += "(EQUAL.END." + label + ")";
+    return return_eq;
 }
 
 /** Generate Hack Assembly code for a VM gt operation */
 string VMTranslator::vm_gt(){
-    return "";
+    // generate a unique label 
+    string label = std::to_string(label_index);
+    label_index++;
+    // if true return -1, false return 0 
+    string return_gt = "@SP\n";
+    return_gt += "AM=M-1\n";
+    return_gt += "D=M\n";
+    return_gt += "A=A-1\n";
+    return_gt += "D=M-D\n";
+    // not greater -> jump
+    return_gt += "@GREATER.FALSE." + label + "\n";
+    return_gt += "D;JLT\n";
+    // greater -> set top to -1
+    return_gt += "@SP\n";
+    return_gt += "A=M-1\n";
+    return_gt += "M=-1\n";
+    return_gt += "@GREATER.END." + label + "\n";
+    return_gt += "0;JMP\n";
+    return_gt += "(GREATER.FALSE." + label + ")\n";
+    // not greater -> set top to 0
+    return_gt += "@SP\n";
+    return_gt += "A=M-1\n";
+    return_gt += "M=0\n";
+    return_gt += "(GREATER.END." + label + ")";
+    return return_gt;
 }
 
 /** Generate Hack Assembly code for a VM lt operation */
 string VMTranslator::vm_lt(){
-    return "";
+    // generate a unique label 
+    string label = std::to_string(label_index);
+    label_index++;
+    // if true return -1, false return 0 
+    string return_lt = "@SP\n";
+    return_lt += "AM=M-1\n";
+    return_lt += "D=M\n";
+    return_lt += "A=A-1\n";
+    return_lt += "D=M-D\n";
+    // not lesser -> jump
+    return_lt += "@LESSER.FALSE." + label + "\n";
+    return_lt += "D;JGT\n";
+    // lesser -> set top to -1
+    return_lt += "@SP\n";
+    return_lt += "A=M-1\n";
+    return_lt += "M=-1\n";
+    return_lt += "@LESSER.END." + label + "\n";
+    return_lt += "0;JMP\n";
+    return_lt += "(LESSER.FALSE." + label + ")\n";
+    // not lesser -> set top to 0
+    return_lt += "@SP\n";
+    return_lt += "A=M-1\n";
+    return_lt += "M=0\n";
+    return_lt += "(LESSER.END." + label + ")";
+    return return_lt;
 }
 
 /** Generate Hack Assembly code for a VM and operation */
@@ -168,10 +240,10 @@ string VMTranslator::vm_and(){
 /** Generate Hack Assembly code for a VM or operation */
 string VMTranslator::vm_or(){
     string return_or = "@SP\n";
-    return_or += "AM = M-1\n";
-    return_or += "D = M\n";
-    return_or += "A = A-1\n";
-    return_or += "M = M|D";
+    return_or += "AM=M-1\n";
+    return_or += "D=M\n";
+    return_or += "A=A-1\n";
+    return_or += "M=M|D";
     return return_or;
 }
 
@@ -199,8 +271,8 @@ string VMTranslator::vm_goto(string label){
 /** Generate Hack Assembly code for a VM if-goto operation */
 string VMTranslator::vm_if(string label){
     string return_if = "@SP\n"; 
-    return_if += "AM = M-1\n";
-    return_if += "D = M\n";
+    return_if += "AM=M-1\n";
+    return_if += "D=M\n";
     return_if += "@" + label + "\n";
     return_if += "D;JNE"; 
     return return_if;
