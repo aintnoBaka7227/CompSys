@@ -1,0 +1,15 @@
+push constant 1
+pop argument 0 
+call vm_returnTest01.func1 1
+pop static 0 
+
+label END 
+goto END 
+
+function vm_returnTest01.func1 1
+push constant 1 
+pop local 0 
+push argument 0 
+push local 0 
+add 
+return 

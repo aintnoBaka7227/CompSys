@@ -119,12 +119,24 @@ string VMTranslator::vm_add(){
 
 /** Generate Hack Assembly code for a VM sub operation */
 string VMTranslator::vm_sub(){
-    return "";
+    // decrease stack pointer down by 1
+    string return_sub = "@SP\n";
+    return_sub += "AM=M-1\n";
+    // get the second value
+    return_sub += "D=M\n";
+    // sub
+    return_sub += "A=A-1\n";
+    return_sub += "M=D-M";
+    return return_sub;
 }
 
 /** Generate Hack Assembly code for a VM neg operation */
 string VMTranslator::vm_neg(){
-    return "";
+    std::string return_neg = "@SP\n";
+    return_neg += "A=M-1\n";
+    return_neg += "M=!M\n";
+    return_neg += "M=M+1";
+    return return_neg;
 }
 
 /** Generate Hack Assembly code for a VM eq operation */
@@ -154,7 +166,12 @@ string VMTranslator::vm_and(){
 
 /** Generate Hack Assembly code for a VM or operation */
 string VMTranslator::vm_or(){
-    return "";
+    std::string return_or = "@SP\n";
+    return_or += "AM = M-1\n";
+    return_or += "D = M\n";
+    return_or += "A = A-1\n";
+    return_or += "M = M|D";
+    return return_or;
 }
 
 /** Generate Hack Assembly code for a VM not operation */
@@ -241,11 +258,11 @@ string VMTranslator::vm_call(string function_name, int n_args){
     return_call += "M=D\n";
 
     // transfer control to g
-    return_call += "(FUNCTION.DEF." + function_name + ")\n";
+    return_call += "@FUNCTION.DEF." + function_name + "\n";
     return_call += "0;JMP\n";
     
     // generated label
-    return_call += "(@RETURN." + label + ")";
+    return_call += "(RETURN." + label + ")";
 
     return return_call;
 }

@@ -1,0 +1,43 @@
+call vm_returnTest02.fib 5 
+pop static 1 
+
+label END 
+goto END 
+
+// Contains a function Fib.fib that calculates and returns the nth Fibonacci number recursively
+// n is supplied as an argument
+
+// Put your code here.
+// recursive funtion 
+function vm_returnTest02.fib 0
+// we use 2 as base case since fib(n) = fib(n-1) + fib(n-2)
+push constant 2 
+push argument 0 
+
+gt
+// check if input is smaller than 2
+if-goto SMALLERTHAN2 
+goto GREATERTHAN2
+
+// case 1: < 2 -> return value in argument 0
+label SMALLERTHAN2 
+push argument 0
+return 
+
+// case 2: >=2 -> return fib(n-1) + fib(n-2)
+label GREATERTHAN2 
+push argument 0 
+push constant 1
+sub 
+// (decrement value of argument 0 by 1, call fib(n-1))
+call Fib.fib 1 
+
+push argument 0 
+push constant 2 
+sub 
+// (decrement value of argument 0 by 2, call fib(n-2))
+call Fib.fib 1 
+
+// take sum and return the recursive sum 
+add 
+return 

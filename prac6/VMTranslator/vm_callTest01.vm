@@ -1,0 +1,20 @@
+push constant 2
+pop argument 0
+push constant 3 
+pop argument 1
+push argument 0
+push argument 1
+add 
+pop argument 0 
+
+call vm_callTest01.func1 1
+label END 
+goto END 
+
+function vm_callTest01.func1 0 
+push constant 2024 
+push argument 0 
+add
+pop static 0 
+return 
+
