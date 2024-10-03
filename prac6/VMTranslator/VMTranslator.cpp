@@ -9,7 +9,6 @@ using namespace std;
  */
 VMTranslator::VMTranslator() {
     // Your code here
-    label_index = 0;
 }
 
 /**
@@ -18,6 +17,8 @@ VMTranslator::VMTranslator() {
 VMTranslator::~VMTranslator() {
     // Your code here
 }
+
+int VMTranslator::label_index = 0;
 
 // this is implemented based on mem layout
 string VMTranslator::format(string segment, int offset) {
