@@ -276,7 +276,8 @@ string VMTranslator::vm_return(){
     string return_return = "@LCL\n";
     return_return += "D=M\n";
     return_return += "@5\n";
-    return_return += "D=D-A\n";
+    return_return += "A=D-A\n";
+    return_return += "D=M\n";
     return_return += "@13\n";
     return_return += "M=D\n";
 
