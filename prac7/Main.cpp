@@ -79,8 +79,14 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("keyword", "int"));
     tokens.push_back(new Token("identifier", "a"));
     tokens.push_back(new Token("symbol", ","));
-    tokens.push_back(new Token("keyword", "bool"));
+    tokens.push_back(new Token("keyword", "char"));
     tokens.push_back(new Token("identifier", "b"));
+    tokens.push_back(new Token("symbol", ","));
+    tokens.push_back(new Token("keyword", "boolean"));
+    tokens.push_back(new Token("identifier", "c"));
+    tokens.push_back(new Token("symbol", ","));
+    tokens.push_back(new Token("identifier", "Test"));
+    tokens.push_back(new Token("identifier", "d"));
     tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "{"));
     tokens.push_back(new Token("symbol", "}")); 
