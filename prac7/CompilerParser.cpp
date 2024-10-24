@@ -173,14 +173,11 @@ ParseTree* CompilerParser::compileParameterList() {
     para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    if (!have("symbol", ",")) {
-        return para_list_tree;
-    }
-    para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
-    
-    while (current_itr != tokens.end() && !have("symbol",")")) {
-        if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
+    while (current_itr != tokens.end() && have("symbol",",")) {
+        para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+
+        if (!have("keyword", "int char boolean")) {
             throw ParseException();
         }
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -192,12 +189,8 @@ ParseTree* CompilerParser::compileParameterList() {
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
 
-        if (have("symbol", ",")) {
-            para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-            if (have("symbol", ")")) {
-                throw ParseException();
-            }
+        if (have("symbol", ")")) {
+            break;
         }
     }
     return para_list_tree;
