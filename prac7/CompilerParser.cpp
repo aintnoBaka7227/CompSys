@@ -34,10 +34,18 @@ ParseTree* CompilerParser::compileProgram() {
 ParseTree* CompilerParser::compileClass() {
     ParseTree* class_tree = new ParseTree("class", "");
 
+    if (!have("keyword", "class")) {
+        throw ParseException();
+        return NULL;
+    }
     class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
+
     std::string class_name = current()->getValue();
-    
+    if (!have("identifier", class_name)) {
+        throw ParseException();
+        return NULL;
+    }
     class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
@@ -61,7 +69,7 @@ ParseTree* CompilerParser::compileClass() {
         next();
     }
 
-    if (!have("symbol", "{")){
+    if (!have("symbol", "}")){
         throw ParseException();
         return NULL;
     }
