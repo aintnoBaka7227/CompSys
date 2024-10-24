@@ -186,11 +186,10 @@ ParseTree* CompilerParser::compileParameterList() {
     if (!have("symbol", ",")) {
         return para_list_tree;
     }
+    para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
     
-    while (current_itr != tokens.end() && have("symbol",",")) {
-        para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
-
+    while (current_itr != tokens.end() && !have("symbol",")")) {
         if (!have("keyword", "int char boolean ") && current()->getType() != "identifier") {
             throw ParseException();
         }
@@ -202,6 +201,11 @@ ParseTree* CompilerParser::compileParameterList() {
         }
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
+
+        if (have("symbol", ",")) {
+            para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
+        }
     }
 
     return para_list_tree;
@@ -243,7 +247,7 @@ ParseTree* CompilerParser::compileVarDec() {
     local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    if (!have("keyword", "int char boolean") && current()->getType() != "identifier" /*&& !have("keyword", "char") && !have("keyword", "boolean")*/){
+    if (!have("keyword", "int char boolean") && current()->getType() != "identifier"){
         throw ParseException();
     }
     local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -282,18 +286,20 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     while(have("keyword", "let if while do return")) {
-        if (current()->getValue() == "let"){
-            statement_tree->addChild(compileLet());
-        } else if (current()->getValue() == "if"){
-            statement_tree->addChild(compileIf());
-        } else if (current()->getValue() == "while"){
-            statement_tree->addChild(compileWhile());
-        } else if (current()->getValue() == "do"){
-            statement_tree->addChild(compileDo());
-        } else if (current()->getValue() == "return"){
-            statement_tree->addChild(compileReturn());
-        } else{
-            throw ParseException();
+        if (current()->getType() == "keyword") {
+            if (current()->getValue() == "let"){
+                statement_tree->addChild(compileLet());
+            } else if (current()->getValue() == "if"){
+                statement_tree->addChild(compileIf());
+            } else if (current()->getValue() == "while"){
+                statement_tree->addChild(compileWhile());
+            } else if (current()->getValue() == "do"){
+                statement_tree->addChild(compileDo());
+            } else if (current()->getValue() == "return"){
+                statement_tree->addChild(compileReturn());
+            } else{
+                throw ParseException();
+            }
         }
         next();
     }
