@@ -34,10 +34,6 @@ ParseTree* CompilerParser::compileProgram() {
 ParseTree* CompilerParser::compileClass() {
     ParseTree* class_tree = new ParseTree("class", "");
 
-    if (!have("keyword", "class")) {
-        throw ParseException();
-        return NULL;
-    }
     class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
@@ -83,36 +79,31 @@ ParseTree* CompilerParser::compileClass() {
  */
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* var_tree = new ParseTree("classVarDec","");
-
-    if (!have("keyword", "static") && !have("keyword", "field")) {
-       throw ParseException();
-        return NULL; 
-    }
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
     if (!have("keyword", "int") && !have("keyword", "char") && !have("keyword", "boolean")){
         throw ParseException();
         return NULL;
     }
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
     if (!(current()->getType() == "identifier")){
         throw ParseException();
         return NULL;
     }
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
     while (current_itr != tokens.end() && have("symbol", ",")){
-        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
         if (!(current()->getType() == "identifier")){
             throw ParseException();
             return NULL;
         }
-        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
     }
 
@@ -120,9 +111,10 @@ ParseTree* CompilerParser::compileClassVarDec() {
         throw ParseException();
         return NULL;
     }
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
 
     return var_tree;
+    
 }
 
 /**
@@ -236,6 +228,9 @@ void CompilerParser::next(){
     if (current_itr != tokens.end()) {
         ++current_itr;
     }
+    else {
+        throw ParseException();
+    }
 }
 
 /**
@@ -259,13 +254,10 @@ Token* CompilerParser::current(){
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
     if(current()->getType() == expectedType && current()->getValue() == expectedValue) {
         return true;
-    } else if(current()->getType() == expectedType && expectedValue.find(current()->getValue()) != std::string::npos){
-        return true;
     } 
     else {
-        throw ParseException();
+        return false;
     }
-    return false;
 }
 
 /**
