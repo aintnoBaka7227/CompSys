@@ -189,9 +189,7 @@ ParseTree* CompilerParser::compileParameterList() {
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
 
-        if (have("symbol", ")")) {
-            break;
-        }
+        
     }
     return para_list_tree;
 }
