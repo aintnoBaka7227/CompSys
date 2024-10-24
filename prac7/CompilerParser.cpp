@@ -177,7 +177,7 @@ ParseTree* CompilerParser::compileParameterList() {
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
 
-        if (!have("keyword", "int char boolean")) {
+        if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
             throw ParseException();
         }
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
