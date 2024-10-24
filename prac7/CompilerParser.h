@@ -9,7 +9,6 @@
 
 class CompilerParser {
     public:
-        int current_token_index = 0;
         std::list<Token*> tokens;
         std::list<Token*>::iterator current_itr;
 
@@ -38,7 +37,7 @@ class CompilerParser {
         Token* current();
         bool have(std::string expectedType, std::string expectedValue);
         Token* mustBe(std::string expectedType, std::string expectedValue);
-        void prev();
+        void back();
 };
 
 class ParseException : public std::exception {
