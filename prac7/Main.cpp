@@ -76,8 +76,8 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("identifier", "int"));
     tokens.push_back(new Token("identifier", "new"));
     tokens.push_back(new Token("symbol", "("));
-    tokens.push_back(new Token("keyword", "int")); // Parameter type
-    tokens.push_back(new Token("identifier", "a")); // Parameter name
+    // tokens.push_back(new Token("keyword", "int")); // Parameter type
+    // tokens.push_back(new Token("identifier", "a")); // Parameter name
     // tokens.push_back(new Token("symbol", ","));      // Comma
     // tokens.push_back(new Token("keyword", "char")); // Next parameter type
     // tokens.push_back(new Token("identifier", "b")); // Next parameter name
@@ -89,6 +89,11 @@ int main(int argc, char *argv[]) {
     // tokens.push_back(new Token("identifier", "d")); // Parameter name
     tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "{"));
+    tokens.push_back(new Token("keyword", "let"));
+    tokens.push_back(new Token("identifier", "a"));
+    tokens.push_back(new Token("symbol", "="));
+    tokens.push_back(new Token("keyword", "skip"));
+    tokens.push_back(new Token("symbol", ";"));
     tokens.push_back(new Token("symbol", "}")); 
     tokens.push_back(new Token("symbol", "}"));        
 

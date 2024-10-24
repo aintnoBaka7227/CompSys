@@ -364,7 +364,12 @@ ParseTree* CompilerParser::compileReturn() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileExpression() {
-    return NULL;
+    ParseTree* expression_tree = new ParseTree("expression", "");
+    if (have("keyword", "skip")) {
+        expression_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        next();
+    }
+    return expression_tree;
 }
 
 /**
