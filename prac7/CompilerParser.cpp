@@ -15,6 +15,9 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileProgram() {
+    if (tokens.size() == 0) {
+        throw ParseException();
+    }
     if (have("keyword", "class")) {
             return compileClass();
     }
