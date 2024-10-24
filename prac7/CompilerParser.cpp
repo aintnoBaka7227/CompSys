@@ -152,12 +152,7 @@ ParseTree* CompilerParser::compileSubroutine() {
     if (!have("symbol", "{")) {
         throw ParseException();
     }
-    routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
-
-    if (!have("symbol", "}")) {
-        routine_tree->addChild(compileSubroutineBody());
-    }
+    routine_tree->addChild(compileSubroutineBody());
 
     // routine_tree->addChild(new ParseTree(mustBe("symbol", "}")->getType(), mustBe("symbol", "}")->getValue()));
     // back();
@@ -231,6 +226,11 @@ ParseTree* CompilerParser::compileSubroutineBody() {
         subroutine_body_tree->addChild(compileStatements());
     }
 
+    // if (!have("symbol", "}")) {
+    //     throw ParseException();
+    // }
+    // subroutine_body_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+
     return subroutine_body_tree;
 }
 
@@ -258,6 +258,7 @@ ParseTree* CompilerParser::compileVarDec() {
     while (current_itr != tokens.end() && have("symbol", ",")){
         local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
+
         if (!(current()->getType() == "identifier")){
             throw ParseException();
         }
@@ -420,14 +421,14 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
     return current_token;
 }
 
-void CompilerParser::back() {
-    if (current_itr != tokens.begin()) {
-        --current_itr;
-    } else {
-        throw ParseException();
-    }
-    return;
-}
+// void CompilerParser::back() {
+//     if (current_itr != tokens.begin()) {
+//         --current_itr;
+//     } else {
+//         throw ParseException();
+//     }
+//     return;
+// }
 
 /**
  * Definition of a ParseException
