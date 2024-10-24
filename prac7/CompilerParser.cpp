@@ -39,7 +39,8 @@ ParseTree* CompilerParser::compileClass() {
     class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    class_tree->addChild(new ParseTree(mustBe("symbol", "{")->getType(), mustBe("symbol", "{")->getValue()));
+    class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
 
     while (current_itr != tokens.end() && !have("symbol", "}")) {
         if (have("keyword", "function") || have("keyword", "method") || have("keyword", "constructor")){
@@ -54,7 +55,7 @@ ParseTree* CompilerParser::compileClass() {
         next();
     }
 
-    class_tree->addChild(new ParseTree(mustBe("symbol", "}")->getType(), mustBe("symbol", "}")->getValue()));
+    class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     
     return class_tree;
 }
