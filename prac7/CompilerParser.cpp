@@ -82,36 +82,36 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
-    ParseTree* tree = new ParseTree("classVarDec","");
+    ParseTree* var_tree = new ParseTree("classVarDec","");
+
     if (!have("keyword", "static") && !have("keyword", "field")) {
-        throw ParseException();
-        return NULL;
+       throw ParseException();
+        return NULL; 
     }
-    tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    if (!have("keyword", "int") && !have("keyword", "char") && !have("keyword", "boolean") && !(current()->getType() == "identifier")){
+    if (!have("keyword", "int") && !have("keyword", "char") && !have("keyword", "boolean")){
         throw ParseException();
         return NULL;
     }
-    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
     next();
 
     if (!(current()->getType() == "identifier")){
         throw ParseException();
         return NULL;
     }
-    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
     next();
 
     while (current_itr != tokens.end() && have("symbol", ",")){
-        tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
         next();
         if (!(current()->getType() == "identifier")){
             throw ParseException();
             return NULL;
         }
-        tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
         next();
     }
 
@@ -119,9 +119,9 @@ ParseTree* CompilerParser::compileClassVarDec() {
         throw ParseException();
         return NULL;
     }
-    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
 
-    return tree;
+    return var_tree;
 }
 
 /**
