@@ -1,6 +1,5 @@
 #include "CompilerParser.h"
 
-
 /**
  * Constructor for the CompilerParser
  * @param tokens A linked list of tokens to be parsed
@@ -50,10 +49,10 @@ ParseTree* CompilerParser::compileClass() {
     next();
 
     while (current_itr != tokens.end() && !have("symbol", "}")) {
-        if (have("keyword", "function method constructor") /*|| have("keyword", "method") || have("keyword", "constructor")*/){
+        if (have("keyword", "function method constructor")){
             class_tree->addChild(compileSubroutine());
         }
-        else if (have("keyword", "static field") /*|| have("keyword", "field")*/){
+        else if (have("keyword", "static field")){
             class_tree->addChild(compileClassVarDec());
         }
         else {
@@ -79,7 +78,7 @@ ParseTree* CompilerParser::compileClassVarDec() {
     var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    if (!have("keyword", "int char boolean") /*&& current()->getType() != "identifier" && !have("keyword", "char") && !have("keyword", "boolean")*/){
+    if (!have("keyword", "int char boolean")){
         throw ParseException();
     }
     var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -118,7 +117,7 @@ ParseTree* CompilerParser::compileSubroutine() {
     routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    if (!have("keyword", "int char boolean void") /*&& current()->getType() != "identifier"*/) {
+    if (!have("keyword", "int char boolean void") && current()->getType() != "identifier") {
         throw ParseException();
     }
     routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -141,25 +140,16 @@ ParseTree* CompilerParser::compileSubroutine() {
         routine_tree->addChild(compileParameterList());
     }
 
-    // routine_tree->addChild(new ParseTree(mustBe("symbol", ")")->getType(), mustBe("symbol", ")")->getValue()));
     if (!have("symbol", ")")) {
         throw ParseException();
     }
     routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    // routine_tree->addChild(new ParseTree(mustBe("symbol", "{")->getType(), mustBe("symbol", "{")->getValue()));
     if (!have("symbol", "{")) {
         throw ParseException();
     }
     routine_tree->addChild(compileSubroutineBody());
-
-    // routine_tree->addChild(new ParseTree(mustBe("symbol", "}")->getType(), mustBe("symbol", "}")->getValue()));
-    // back();
-    // if (!have("symbol", "}")) {
-    //     throw ParseException();
-    // }
-    // routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
 
     return routine_tree;
 }
@@ -171,7 +161,7 @@ ParseTree* CompilerParser::compileSubroutine() {
 ParseTree* CompilerParser::compileParameterList() {
     ParseTree* para_list_tree = new ParseTree("parameterList", "");
 
-    if (!have("keyword", "int char boolean") /*&& current()->getType() != "identifier"*/) {
+    if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
         throw ParseException();
     }
     para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -190,7 +180,7 @@ ParseTree* CompilerParser::compileParameterList() {
     next();
     
     while (current_itr != tokens.end() && !have("symbol",")")) {
-        if (!have("keyword", "int char boolean") /*&& current()->getType() != "identifier"*/) {
+        if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
             throw ParseException();
         }
         para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
