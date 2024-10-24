@@ -6,6 +6,8 @@
  * @param tokens A linked list of tokens to be parsed
  */
 CompilerParser::CompilerParser(std::list<Token*> tokens) {
+    this->tokens = tokens;
+    this->current_itr = this->tokens.begin();
 }
 
 /**
@@ -13,6 +15,17 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileProgram() {
+    if (have("keyword", "class")) {
+        next();
+        if (current()->getType() == "identifier" || current()->getValue() == "Main" || current()->getValue() == "main") {
+            prev();
+            ParseTree* result = compileClass();
+            return result;
+        } else {
+            throw ParseException();
+        }
+    }
+    throw ParseException();
     return NULL;
 }
 
@@ -21,7 +34,30 @@ ParseTree* CompilerParser::compileProgram() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClass() {
-    return NULL;
+    ParseTree* class_tree = new ParseTree("class", "");
+    class_tree->addChild(new ParseTree(mustBe("keyword", "class")->getType(), mustBe("keyword", "class")->getValue()));
+    
+    std::string class_name = current()->getValue();
+    class_tree->addChild(new ParseTree(mustBe("identifier", class_name)->getType(), mustBe("identifier", class_name)->getValue()));
+    
+    class_tree->addChild(new ParseTree(mustBe("symbol", "{")->getType(), mustBe("symbol", "{")->getValue()));
+
+    while (current_itr != tokens.end() && !have("symbol", "}")) {
+        if (have("keyword", "function") || have("keyword", "method") || have("keyword", "constructor")){
+            class_tree->addChild(compileSubroutine());
+        }
+        else if (have("keyword", "static") || have("keyword", "field")){
+            class_tree->addChild(compileClassVarDec());
+        }
+        else {
+            throw ParseException();
+        }
+        next();
+    }
+
+    class_tree->addChild(new ParseTree(mustBe("symbol", "}")->getType(), mustBe("symbol", "}")->getValue()));
+    
+    return class_tree;
 }
 
 /**
@@ -140,7 +176,9 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
-    return;
+    if (current_itr != tokens.end()) {
+        ++current_itr;
+    }
 }
 
 /**
@@ -148,6 +186,12 @@ void CompilerParser::next(){
  * @return the Token
  */
 Token* CompilerParser::current(){
+    if (current_itr != tokens.end()) {
+        return *current_itr;
+    }
+    else {
+        throw ParseException();
+    }
     return NULL;
 }
 
@@ -156,6 +200,14 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
+    if(current()->getType() == expectedType && current()->getValue() == expectedValue) {
+        return true;
+    } else if(current()->getType() == expectedType && expectedValue.find(current()->getValue()) != std::string::npos){
+        return true;
+    } 
+    else {
+        throw ParseException();
+    }
     return false;
 }
 
@@ -165,7 +217,22 @@ bool CompilerParser::have(std::string expectedType, std::string expectedValue){
  * @return the current token before advancing
  */
 Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValue){
-    return NULL;
+    if (!this->have(expectedType,expectedValue)) {
+        throw ParseException();
+        return NULL;
+    }
+    Token* current_token = this->current();
+    this->next();
+    return current_token;
+}
+
+void CompilerParser::prev() {
+    if (current_itr != tokens.begin()) {
+        --current_itr;
+    } else {
+        throw ParseException();
+    }
+    return;
 }
 
 /**
