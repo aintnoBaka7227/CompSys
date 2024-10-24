@@ -16,16 +16,11 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  */
 ParseTree* CompilerParser::compileProgram() {
     if (have("keyword", "class")) {
-        next();
-        if (current()->getType() == "identifier" || current()->getValue() == "Main" || current()->getValue() == "main") {
-            prev();
-            ParseTree* result = compileClass();
-            return result;
-        } else {
-            throw ParseException();
-        }
+            return compileClass();
     }
-    throw ParseException();
+    else {
+            throw ParseException();
+    }
     return NULL;
 }
 
@@ -35,11 +30,12 @@ ParseTree* CompilerParser::compileProgram() {
  */
 ParseTree* CompilerParser::compileClass() {
     ParseTree* class_tree = new ParseTree("class", "");
-    class_tree->addChild(new ParseTree(mustBe("keyword", "class")->getType(), mustBe("keyword", "class")->getValue()));
-    
-    std::string class_name = current()->getValue();
-    class_tree->addChild(new ParseTree(mustBe("identifier", class_name)->getType(), mustBe("identifier", class_name)->getValue()));
-    
+    class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
+
+    class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
+
     class_tree->addChild(new ParseTree(mustBe("symbol", "{")->getType(), mustBe("symbol", "{")->getValue()));
 
     while (current_itr != tokens.end() && !have("symbol", "}")) {
