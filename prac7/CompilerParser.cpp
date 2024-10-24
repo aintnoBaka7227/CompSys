@@ -41,8 +41,7 @@ ParseTree* CompilerParser::compileClass() {
     class_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    std::string class_name = current()->getValue();
-    if (!have("identifier", class_name)) {
+    if (!(current()->getType() == "identifier")){
         throw ParseException();
         return NULL;
     }
@@ -83,7 +82,46 @@ ParseTree* CompilerParser::compileClass() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileClassVarDec() {
-    return NULL;
+    ParseTree* tree = new ParseTree("classVarDec","");
+    if (!have("keyword", "static") && !have("keyword", "field")) {
+        throw ParseException();
+        return NULL;
+    }
+    tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
+
+    if (!have("keyword", "int") && !have("keyword", "char") && !have("keyword", "boolean") && !(current()->getType() == "identifier")){
+        throw ParseException();
+        return NULL;
+    }
+    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!(current()->getType() == "identifier")){
+        throw ParseException();
+        return NULL;
+    }
+    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    while (current_itr != tokens.end() && have("symbol", ",")){
+        tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        next();
+        if (!(current()->getType() == "identifier")){
+            throw ParseException();
+            return NULL;
+        }
+        tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        next();
+    }
+
+    if (!have("symbol", ";")){
+        throw ParseException();
+        return NULL;
+    }
+    tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+
+    return tree;
 }
 
 /**
