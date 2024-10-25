@@ -1,4 +1,6 @@
 #include "CompilerParser.h"
+#include <iostream>
+using namespace std;
 
 /**
  * Constructor for the CompilerParser
@@ -129,7 +131,6 @@ ParseTree* CompilerParser::compileSubroutine() {
     routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
-    // routine_tree->addChild(new ParseTree(mustBe("symbol", "(")->getType(), mustBe("symbol", "(")->getValue()));
     if (!have("symbol", "(")) {
         throw ParseException();
     }
@@ -149,6 +150,7 @@ ParseTree* CompilerParser::compileSubroutine() {
     if (!have("symbol", "{")) {
         throw ParseException();
     }
+
     routine_tree->addChild(compileSubroutineBody());
 
     return routine_tree;
@@ -269,23 +271,31 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     while(have("keyword", "let if while do return")) {
-        if (current()->getType() == "keyword") {
-            if (current()->getValue() == "let"){
+        cout << "Expected keyword 'let do return', got: " << current()->getValue() << endl;
+        if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
-        } else if (current()->getValue() == "if"){
+            next();
+            continue;
+        }
+        if (current()->getValue() == "if"){
             statement_tree->addChild(compileIf());
-        } else if (current()->getValue() == "while"){
+            next();
+            continue;
+        }
+        if (current()->getValue() == "while"){
             statement_tree->addChild(compileWhile());
-        } else if (current()->getValue() == "do"){
+            next();
+            continue;
+        }
+        if (current()->getValue() == "do"){
             statement_tree->addChild(compileDo());
-        } else if (current()->getValue() == "return"){
+            next();
+            continue;
+        }
+        if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
+            next();
         }
-        else {
-            throw ParseException();
-        }
-        }
-        next();
     }
 
     return statement_tree;
