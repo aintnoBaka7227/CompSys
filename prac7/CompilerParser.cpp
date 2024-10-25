@@ -410,7 +410,23 @@ ParseTree* CompilerParser::compileWhile() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileDo() {
-    return NULL;
+    ParseTree* do_tree = new ParseTree("do","");
+
+    if(!have("keyword","do")){
+        throw ParseException();
+    }
+    do_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    do_tree->addChild(compileExpression());
+    
+    
+    if (!have("symbol", ";")){
+        throw ParseException();
+    }
+    do_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+
+    return do_tree;
 }
 
 /**
@@ -418,7 +434,24 @@ ParseTree* CompilerParser::compileDo() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileReturn() {
-    return NULL;
+    ParseTree* return_tree = new ParseTree("return","");
+
+    if(have("keyword","return")){
+        throw ParseException();
+    }
+    return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!have("symbol", ";")){
+        return_tree->addChild(compileExpression());
+    }
+    
+    if (!have("symbol", ";")){
+        throw ParseException();
+    }
+    return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+
+    return return_tree;
 }
 // cap 80 points
 
