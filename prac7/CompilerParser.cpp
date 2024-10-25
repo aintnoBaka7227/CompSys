@@ -324,7 +324,7 @@ ParseTree* CompilerParser::compileLet() {
     next();
 
     let_tree->addChild(compileExpression());
-    
+
     if (!have("symbol", ";")){
         throw ParseException();
     }
@@ -440,7 +440,11 @@ ParseTree* CompilerParser::compileReturn() {
     return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
     next();
 
-    if (!have("symbol", ";")){
+    if (have("symbol", ";")){
+        return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        return_tree;
+    }
+    else {
         return_tree->addChild(compileExpression());
     }
     
