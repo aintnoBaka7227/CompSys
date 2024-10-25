@@ -296,6 +296,10 @@ ParseTree* CompilerParser::compileStatements() {
  */
 ParseTree* CompilerParser::compileLet() {
     ParseTree* let_tree = new ParseTree("let", "");
+
+    if (!have("keyword", "let")) {
+        throw ParseException();
+    }
     let_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     next();
 
@@ -310,7 +314,7 @@ ParseTree* CompilerParser::compileLet() {
         next();
 
         let_tree->addChild(compileExpression());
-        
+
         let_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
         next();
     }
@@ -335,7 +339,62 @@ ParseTree* CompilerParser::compileLet() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileIf() {
-    return NULL;
+    ParseTree* if_tree = new ParseTree("if","");
+
+    if (!have("keyword", "if")) {
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!have("symbol", "(")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if_tree->addChild(compileExpression());
+
+    if (!have("symbol", ")")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!have("symbol", "{")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if_tree->addChild(compileStatements());
+    
+    if (!have("symbol", "}")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!have("keyword", "else")){
+        return if_tree;
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+
+    if (!have("symbol", "{")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    next();
+        
+    if_tree->addChild(compileStatements());
+
+    if (!have("symbol", "}")){
+        throw ParseException();
+    }
+    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+
+    return if_tree;
 }
 
 /**
