@@ -11,7 +11,7 @@ class CompilerParser {
     public:
         std::list<Token*> tokens;
         std::list<Token*>::iterator current_itr;
-        int count = 0;
+        int count;
 
         CompilerParser(std::list<Token*> tokens);
 

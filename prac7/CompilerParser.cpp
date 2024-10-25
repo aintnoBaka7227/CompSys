@@ -9,6 +9,7 @@ using namespace std;
 CompilerParser::CompilerParser(std::list<Token*> tokens) {
     this->tokens = tokens;
     this->current_itr = this->tokens.begin();
+    count = 0;
 }
 
 /**
