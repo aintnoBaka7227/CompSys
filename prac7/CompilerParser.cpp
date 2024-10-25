@@ -277,22 +277,22 @@ ParseTree* CompilerParser::compileStatements() {
             next();
             //continue;
         }
-        if (current()->getValue() == "if"){
+        else if (current()->getValue() == "if"){
             statement_tree->addChild(compileIf());
             next();
             //continue;
         }
-        if (current()->getValue() == "while"){
+        else if (current()->getValue() == "while"){
             statement_tree->addChild(compileWhile());
             next();
             //continue;
         }
-        if (current()->getValue() == "do"){
+        else if (current()->getValue() == "do"){
             statement_tree->addChild(compileDo());
             next();
             //continue;
         }
-        if (current()->getValue() == "return"){
+        else if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
             next();
         }
