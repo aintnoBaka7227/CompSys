@@ -413,10 +413,10 @@ ParseTree* CompilerParser::compileIf() {
     }
     if_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
 
-    next(); // bug here
+    //next(); // bug here
 
     if (!have("keyword", "else")){
-        back();
+        //back();
         return if_tree;
     }
     else {
