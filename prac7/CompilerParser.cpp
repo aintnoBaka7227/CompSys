@@ -270,29 +270,29 @@ ParseTree* CompilerParser::compileVarDec() {
 ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
-    while(have("keyword", "let if while do return")) {
-        //cout << "Expected keyword 'let do return', got: " << current()->getValue() << endl;
+    // while(have("keyword", "let if while do return")) {
+    if(have("keyword", "let if while do return")) {
         if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
             next();
-            continue;
+            //continue;
         }
-        if (current()->getValue() == "if"){
+        else if (current()->getValue() == "if"){
             statement_tree->addChild(compileIf());
             next();
-            continue;
+            //continue;
         }
-        if (current()->getValue() == "while"){
+        else if (current()->getValue() == "while"){
             statement_tree->addChild(compileWhile());
             next();
-            continue;
+            //continue;
         }
-        if (current()->getValue() == "do"){
+        else if (current()->getValue() == "do"){
             statement_tree->addChild(compileDo());
             next();
-            continue;
+            //continue;
         }
-        if (current()->getValue() == "return"){
+        else if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
             next();
         }
@@ -515,9 +515,6 @@ ParseTree* CompilerParser::compileExpression() {
     if (have("keyword", "skip")) {
         expression_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
-    }
-    else {
-        throw ParseException();
     }
     return expression_tree;
 }
