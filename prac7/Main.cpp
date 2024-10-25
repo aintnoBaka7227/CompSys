@@ -104,10 +104,43 @@ int main(int argc, char *argv[]) {
 
     // tokens.push_back(new Token("symbol", "}")); 
     // tokens.push_back(new Token("symbol", "}")); 
+    // tokens.push_back(new Token("keyword", "class"));
+    // tokens.push_back(new Token("identifier", "MyClass"));
+    // tokens.push_back(new Token("symbol", "{"));
+    
+    // tokens.push_back(new Token("keyword", "function"));
+    // tokens.push_back(new Token("keyword", "int"));
+    // tokens.push_back(new Token("identifier", "new"));
+    // tokens.push_back(new Token("symbol", "("));
+    // tokens.push_back(new Token("symbol", ")"));
+    // tokens.push_back(new Token("symbol", "{"));
+
+    // // tokens.push_back(new Token("keyword", "var"));
+    // // tokens.push_back(new Token("keyword", "int"));
+    // // tokens.push_back(new Token("identifier", "a"));
+    // // tokens.push_back(new Token("symbol", ";"));
+    
+    // // tokens.push_back(new Token("keyword", "let"));
+    // // tokens.push_back(new Token("identifier", "a"));
+    // // tokens.push_back(new Token("symbol", "="));
+    // // tokens.push_back(new Token("keyword", "skip"));
+    // // tokens.push_back(new Token("symbol", ";"));
+
+    // tokens.push_back(new Token("keyword", "do"));
+    // tokens.push_back(new Token("keyword", "skip"));
+    // tokens.push_back(new Token("symbol", ";"));
+    
+    // // tokens.push_back(new Token("keyword", "return"));
+    // // tokens.push_back(new Token("symbol", ";"));
+    
+    // tokens.push_back(new Token("symbol", "}"));
+    // tokens.push_back(new Token("symbol", "}"));  
+
+
     tokens.push_back(new Token("keyword", "class"));
     tokens.push_back(new Token("identifier", "MyClass"));
     tokens.push_back(new Token("symbol", "{"));
-    
+
     tokens.push_back(new Token("keyword", "function"));
     tokens.push_back(new Token("keyword", "int"));
     tokens.push_back(new Token("identifier", "new"));
@@ -115,26 +148,23 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "{"));
 
-    tokens.push_back(new Token("keyword", "var"));
-    tokens.push_back(new Token("keyword", "int"));
-    tokens.push_back(new Token("identifier", "a"));
-    tokens.push_back(new Token("symbol", ";"));
-    
-    tokens.push_back(new Token("keyword", "let"));
-    tokens.push_back(new Token("identifier", "a"));
-    tokens.push_back(new Token("symbol", "="));
-    tokens.push_back(new Token("keyword", "skip"));
-    tokens.push_back(new Token("symbol", ";"));
-
-    tokens.push_back(new Token("keyword", "do"));
-    tokens.push_back(new Token("keyword", "skip"));
-    tokens.push_back(new Token("symbol", ";"));
-    
-    // tokens.push_back(new Token("keyword", "return"));
+    // tokens.push_back(new Token("keyword", "var"));
+    // tokens.push_back(new Token("keyword", "int"));
+    // tokens.push_back(new Token("identifier", "a"));
     // tokens.push_back(new Token("symbol", ";"));
-    
-    tokens.push_back(new Token("symbol", "}"));
-    tokens.push_back(new Token("symbol", "}"));       
+
+    //Adding tokens for `if ( skip ) { }`
+    tokens.push_back(new Token("keyword", "if"));       // if statement
+    tokens.push_back(new Token("symbol", "("));          // opening parenthesis
+    tokens.push_back(new Token("keyword", "skip"));      // condition as `skip`
+    tokens.push_back(new Token("symbol", ")"));          // closing parenthesis
+    tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
+    tokens.push_back(new Token("symbol", "}"));          // closing brace for if body
+    // tokens.push_back(new Token("keyword", "else"));
+    // tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
+    // tokens.push_back(new Token("symbol", "}"));
+    tokens.push_back(new Token("symbol", "}"));  // Closing function body
+    tokens.push_back(new Token("symbol", "}"));  // Closing class body     
 
     try {
         CompilerParser parser(tokens);

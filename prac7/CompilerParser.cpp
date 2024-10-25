@@ -412,9 +412,11 @@ ParseTree* CompilerParser::compileIf() {
         throw ParseException();
     }
     if_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+
+    next(); // bug here
 
     if (!have("keyword", "else")){
+        back();
         return if_tree;
     }
     else {
@@ -615,6 +617,14 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
     Token* current_token = current();
     next();
     return current_token;
+}
+
+void CompilerParser::back(){
+    if (current_itr != tokens.begin()) {
+        --current_itr;
+    } else {
+        throw ParseException();
+    }
 }
 
 /**
