@@ -271,7 +271,7 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     while(have("keyword", "let if while do return")) {
-        cout << "Expected keyword 'let do return', got: " << current()->getValue() << endl;
+        //cout << "Expected keyword 'let do return', got: " << current()->getValue() << endl;
         if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
             next();
@@ -589,15 +589,6 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
     next();
     return current_token;
 }
-
-// void CompilerParser::back() {
-//     if (current_itr != tokens.begin()) {
-//         --current_itr;
-//     } else {
-//         throw ParseException();
-//     }
-//     return;
-// }
 
 /**
  * Definition of a ParseException
