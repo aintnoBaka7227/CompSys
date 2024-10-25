@@ -479,14 +479,14 @@ ParseTree* CompilerParser::compileReturn() {
         return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
         return return_tree;
     }
-        
-    return_tree->addChild(compileExpression());
+    else {
+        return_tree->addChild(compileExpression());
     
-    if (!have("symbol", ";")){
-        throw ParseException();
-    }
-    return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
-
+        if (!have("symbol", ";")){
+            throw ParseException();
+        }
+        return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+    }   
     return return_tree;
 }
 // cap 80 points
