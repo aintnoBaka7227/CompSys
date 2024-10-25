@@ -269,7 +269,8 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     while(have("keyword", "let if while do return")) {
-        if (current()->getValue() == "let"){
+        if (current()->getType() == "keyword") {
+            if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
         } else if (current()->getValue() == "if"){
             statement_tree->addChild(compileIf());
@@ -280,9 +281,10 @@ ParseTree* CompilerParser::compileStatements() {
         } else if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
         }
-        // else {
-        //     throw ParseException();
-        // }
+        else {
+            throw ParseException();
+        }
+        }
         next();
     }
 
