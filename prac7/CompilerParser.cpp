@@ -416,13 +416,13 @@ ParseTree* CompilerParser::compileIf() {
 
     next(); // bug here
 
-    auto it = tokens.begin();
-    std::advance(it, count);
-    Token* pos = *it;
-    if (pos->getType() != "keyword" && pos->getValue() != "else") {
-        --current_itr;
-        return if_tree;
-    }
+    // auto it = tokens.begin();
+    // std::advance(it, count);
+    // Token* pos = *it;
+    // if (pos->getType() != "keyword" && pos->getValue() != "else") {
+    //     --current_itr;
+    //     return if_tree;
+    // }
 
     if (!have("keyword", "else")){
         return if_tree;
