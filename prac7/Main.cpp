@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("symbol", "{"));
     
     tokens.push_back(new Token("keyword", "function"));
-    tokens.push_back(new Token("identifier", "int"));
+    tokens.push_back(new Token("keyword", "int"));
     tokens.push_back(new Token("identifier", "new"));
     tokens.push_back(new Token("symbol", "("));
     tokens.push_back(new Token("symbol", ")"));
