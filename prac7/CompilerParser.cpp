@@ -279,9 +279,10 @@ ParseTree* CompilerParser::compileStatements() {
             statement_tree->addChild(compileDo());
         } else if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
-        } else{
-            throw ParseException();
         }
+        // else {
+        //     throw ParseException();
+        // }
         next();
     }
 
@@ -377,21 +378,23 @@ ParseTree* CompilerParser::compileIf() {
     if (!have("keyword", "else")){
         return if_tree;
     }
-    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
-    next();
+    else {
+        if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        next();
 
-    if (!have("symbol", "{")){
-        throw ParseException();
-    }
-    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
-    next();
+        if (!have("symbol", "{")){
+            throw ParseException();
+        }
+        if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
+        next();
         
-    if_tree->addChild(compileStatements());
+        if_tree->addChild(compileStatements());
 
-    if (!have("symbol", "}")){
-        throw ParseException();
+        if (!have("symbol", "}")){
+            throw ParseException();
+        }
+        if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
     }
-    if_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
 
     return if_tree;
 }
