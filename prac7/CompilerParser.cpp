@@ -469,7 +469,7 @@ ParseTree* CompilerParser::compileDo() {
 ParseTree* CompilerParser::compileReturn() {
     ParseTree* return_tree = new ParseTree("returnStatement","");
 
-    if(have("keyword","return")){
+    if(!have("keyword","return")){
         throw ParseException();
     }
     return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
@@ -479,9 +479,8 @@ ParseTree* CompilerParser::compileReturn() {
         return_tree->addChild(new ParseTree(current()->getType(), current()->getValue() ));
         return return_tree;
     }
-    else {
-        return_tree->addChild(compileExpression());
-    }
+        
+    return_tree->addChild(compileExpression());
     
     if (!have("symbol", ";")){
         throw ParseException();
