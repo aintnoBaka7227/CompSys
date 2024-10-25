@@ -269,20 +269,18 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     while(have("keyword", "let if while do return")) {
-        if (current()->getType() == "keyword") {
-            if (current()->getValue() == "let"){
-                statement_tree->addChild(compileLet());
-            } else if (current()->getValue() == "if"){
-                statement_tree->addChild(compileIf());
-            } else if (current()->getValue() == "while"){
-                statement_tree->addChild(compileWhile());
-            } else if (current()->getValue() == "do"){
-                statement_tree->addChild(compileDo());
-            } else if (current()->getValue() == "return"){
-                statement_tree->addChild(compileReturn());
-            } else{
-                throw ParseException();
-            }
+        if (current()->getValue() == "let"){
+            statement_tree->addChild(compileLet());
+        } else if (current()->getValue() == "if"){
+            statement_tree->addChild(compileIf());
+        } else if (current()->getValue() == "while"){
+            statement_tree->addChild(compileWhile());
+        } else if (current()->getValue() == "do"){
+            statement_tree->addChild(compileDo());
+        } else if (current()->getValue() == "return"){
+            statement_tree->addChild(compileReturn());
+        } else{
+            throw ParseException();
         }
         next();
     }
@@ -295,7 +293,7 @@ ParseTree* CompilerParser::compileStatements() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileLet() {
-    ParseTree* let_tree = new ParseTree("let", "");
+    ParseTree* let_tree = new ParseTree("letStatement", "");
 
     if (!have("keyword", "let")) {
         throw ParseException();
@@ -326,6 +324,7 @@ ParseTree* CompilerParser::compileLet() {
     next();
 
     let_tree->addChild(compileExpression());
+    
     if (!have("symbol", ";")){
         throw ParseException();
     }
@@ -339,7 +338,7 @@ ParseTree* CompilerParser::compileLet() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileIf() {
-    ParseTree* if_tree = new ParseTree("if","");
+    ParseTree* if_tree = new ParseTree("ifStatement","");
 
     if (!have("keyword", "if")) {
         throw ParseException();
@@ -410,7 +409,7 @@ ParseTree* CompilerParser::compileWhile() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileDo() {
-    ParseTree* do_tree = new ParseTree("do","");
+    ParseTree* do_tree = new ParseTree("doStatement","");
 
     if(!have("keyword","do")){
         throw ParseException();
@@ -419,7 +418,6 @@ ParseTree* CompilerParser::compileDo() {
     next();
 
     do_tree->addChild(compileExpression());
-    
     
     if (!have("symbol", ";")){
         throw ParseException();
@@ -434,7 +432,7 @@ ParseTree* CompilerParser::compileDo() {
  * @return a ParseTree
  */
 ParseTree* CompilerParser::compileReturn() {
-    ParseTree* return_tree = new ParseTree("return","");
+    ParseTree* return_tree = new ParseTree("returnStatement","");
 
     if(have("keyword","return")){
         throw ParseException();
