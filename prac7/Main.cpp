@@ -68,14 +68,7 @@ int main(int argc, char *argv[]) {
     // tokens.push_back(new Token("symbol", ")"));
     // tokens.push_back(new Token("symbol", "{"));
     // tokens.push_back(new Token("symbol", "}")); 
-    // tokens.push_back(new Token("symbol", "}"));   
-    tokens.push_back(new Token("keyword", "class"));
-    tokens.push_back(new Token("identifier", "MyClass"));
-    tokens.push_back(new Token("symbol", "{")); 
-    tokens.push_back(new Token("keyword", "function"));
-    tokens.push_back(new Token("identifier", "int"));
-    tokens.push_back(new Token("identifier", "new"));
-    tokens.push_back(new Token("symbol", "("));
+    // tokens.push_back(new Token("symbol", "}"));  
     // tokens.push_back(new Token("keyword", "int")); // Parameter type
     // tokens.push_back(new Token("identifier", "a")); // Parameter name
     // tokens.push_back(new Token("symbol", ","));      // Comma
@@ -86,7 +79,14 @@ int main(int argc, char *argv[]) {
     // tokens.push_back(new Token("identifier", "c")); // Next parameter name
     // tokens.push_back(new Token("symbol", ","));      // Comma
     // tokens.push_back(new Token("identifier", "Test")); // Next parameter type (class type)
-    // tokens.push_back(new Token("identifier", "d")); // Parameter name
+    // tokens.push_back(new Token("identifier", "d")); // Parameter name 
+    tokens.push_back(new Token("keyword", "class"));
+    tokens.push_back(new Token("identifier", "MyClass"));
+    tokens.push_back(new Token("symbol", "{")); 
+    tokens.push_back(new Token("keyword", "function"));
+    tokens.push_back(new Token("identifier", "int"));
+    tokens.push_back(new Token("identifier", "new"));
+    tokens.push_back(new Token("symbol", "("));
     tokens.push_back(new Token("symbol", ")"));
     tokens.push_back(new Token("symbol", "{"));
     tokens.push_back(new Token("keyword", "let"));
