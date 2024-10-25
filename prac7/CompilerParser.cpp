@@ -413,10 +413,17 @@ ParseTree* CompilerParser::compileIf() {
     }
     if_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
 
-    //next(); // bug here
+    next(); // bug here
+
+    auto it = tokens.begin();
+    std::advance(it, count);
+    Token* pos = *it;
+    if (pos->getType() != "keyword" && pos->getValue() != "else") {
+        --current_itr;
+        return if_tree;
+    }
 
     if (!have("keyword", "else")){
-        //back();
         return if_tree;
     }
     else {
@@ -570,6 +577,7 @@ ParseTree* CompilerParser::compileExpressionList() {
 void CompilerParser::next(){
     if (current_itr != tokens.end()) {
         ++current_itr;
+        count++;
     }
     else {
         throw ParseException();
@@ -617,14 +625,6 @@ Token* CompilerParser::mustBe(std::string expectedType, std::string expectedValu
     Token* current_token = current();
     next();
     return current_token;
-}
-
-void CompilerParser::back(){
-    if (current_itr != tokens.begin()) {
-        --current_itr;
-    } else {
-        throw ParseException();
-    }
 }
 
 /**
