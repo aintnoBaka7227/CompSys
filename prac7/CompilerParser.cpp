@@ -8,7 +8,6 @@ using namespace std;
  */
 CompilerParser::CompilerParser(std::list<Token*> tokens) {
     this->tokens = tokens;
-    //this->current_itr = this->tokens.begin();
     count = 0;
 }
 
@@ -402,19 +401,13 @@ ParseTree* CompilerParser::compileExpression() {
 
     expression_tree->addChild(compileTerm());
 
-    std::string op;
-    if(current() != NULL){
-        op = current()->getValue();
-    }
+    std::string op = current()->getValue();
 
-    while (have("symbol", "+-*/&|<>=")){
+    while (current() != NULL && !have("symbol", "] )") && have("symbol", "+-*/&|<>=")){
         expression_tree->addChild(mustBe("symbol", op));
 
         expression_tree->addChild(compileTerm());
-
-        if(current() == NULL || current()->getValue() == "]" || current()->getValue() == ")"){
-            break;
-        }
+        
         op = current()->getValue();
     }
     return expression_tree;
@@ -428,21 +421,10 @@ ParseTree* CompilerParser::compileExpression() {
 ParseTree* CompilerParser::compileTerm() {
     ParseTree* term_tree = new ParseTree("term", "");
 
-    if(current()->getType() == "integerConstant"){
+    if(current()->getType() == "integerConstant" || current()->getType() == "stringConstant" || current()->getType() == "keyword"){
         std::string value = current()->getValue();
-        term_tree->addChild(mustBe("integerConstant", value));
-        return term_tree;
-    }
-
-    if (current()->getType() == "stringConstant") {
-        std::string value = current()->getValue();
-        term_tree->addChild(mustBe("stringConstant", value));
-        return term_tree;
-    }
-
-    if(current()->getType() == "keyword"){
-        std::string value = current()->getValue();
-        term_tree->addChild(mustBe("keyword", value));
+        std::string type = current()->getType();
+        term_tree->addChild(mustBe(type, value));
         return term_tree;
     }
 
@@ -458,29 +440,27 @@ ParseTree* CompilerParser::compileTerm() {
             term_tree->addChild(mustBe("symbol", "]"));
         }
 
-        if(have("symbol", "(") || have("symbol", ".")){
-            if(have("symbol", "(")){
-                term_tree->addChild(mustBe("symbol", "("));
+        if(have("symbol", "(")){
+            term_tree->addChild(mustBe("symbol", "("));
 
-                term_tree->addChild(compileExpressionList());
+            term_tree->addChild(compileExpressionList());
 
-                term_tree->addChild(mustBe("symbol", ")"));
-            }
-            else{
-                term_tree->addChild(mustBe("symbol", "."));
-
-                std::string subrou = current()->getValue();
-                term_tree->addChild(mustBe("identifier", subrou));
-
-                term_tree->addChild(mustBe("symbol", "("));
-
-                term_tree->addChild(compileExpressionList());
-                
-                term_tree->addChild(mustBe("symbol", ")"));
-            }
+            term_tree->addChild(mustBe("symbol", ")"));
             return term_tree;
         }
+        else if (have("symbol", ".")){
+            term_tree->addChild(mustBe("symbol", "."));
 
+            std::string subrou = current()->getValue();
+            term_tree->addChild(mustBe("identifier", subrou));
+
+            term_tree->addChild(mustBe("symbol", "("));
+
+            term_tree->addChild(compileExpressionList());
+                
+            term_tree->addChild(mustBe("symbol", ")"));
+            return term_tree;
+        }
         return term_tree;
     }
 
@@ -517,14 +497,10 @@ ParseTree* CompilerParser::compileExpressionList() {
         return expr_list_tree;
     }
 
-    while (current()->getValue() == ",") {
+    while (current() != NULL && current()->getValue() == ",") {
         expr_list_tree->addChild(mustBe("symbol", ","));
 
         expr_list_tree->addChild(compileExpression());
-
-        if (current() == NULL) {
-            break;
-        }
     }
 
     return expr_list_tree;
