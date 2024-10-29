@@ -299,52 +299,31 @@ ParseTree* CompilerParser::compileStatements() {
     //     }
     // }
 
-    // while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
-    //     if (current()->getValue() == "let"){
-    //         statement_tree->addChild(compileLet());
-    //         next();
-    //         //continue;
-    //     }
-    //     else if (current()->getValue() == "if"){
-    //         statement_tree->addChild(compileIf());
-    //         next();
-    //         //continue;
-    //     }
-    //     else if (current()->getValue() == "while"){
-    //         statement_tree->addChild(compileWhile());
-    //         next();
-    //         //continue;
-    //     }
-    //     else if (current()->getValue() == "do"){
-    //         statement_tree->addChild(compileDo());
-    //         next();
-    //         //continue;
-    //     }
-    //     else if (current()->getValue() == "return"){
-    //         statement_tree->addChild(compileReturn());
-    //         next();
-    //     }
-    // }
+    while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
+        if (current()->getValue() == "let"){
+            statement_tree->addChild(compileLet());
+            next();
+            //continue;
+        }
+        else if (current()->getValue() == "if"){
+            statement_tree->addChild(compileIf());
 
-    while(have("keyword", "let")&& current_itr != tokens.end() && !have("symbol", "}")){
-        statement_tree->addChild(compileLet());
-        next();
-    }
-    while(have("keyword", "if")&& current_itr != tokens.end() && !have("symbol", "}")){
-        statement_tree->addChild(compileIf());
-        next();
-    }
-    while(have("keyword", "while")&& current_itr != tokens.end() && !have("symbol", "}")){
-        statement_tree->addChild(compileWhile());
-        next();
-    }
-    while(have("keyword", "do")&& current_itr != tokens.end() && !have("symbol", "}")){
-        statement_tree->addChild(compileDo());
-        next();
-    }
-    while(have("keyword", "return")&& current_itr != tokens.end() && !have("symbol", "}")){
-        statement_tree->addChild(compileReturn());
-        next();
+            //continue;
+        }
+        else if (current()->getValue() == "while"){
+            statement_tree->addChild(compileWhile());
+            next();
+            //continue;
+        }
+        else if (current()->getValue() == "do"){
+            statement_tree->addChild(compileDo());
+            next();
+            //continue;
+        }
+        else if (current()->getValue() == "return"){
+            statement_tree->addChild(compileReturn());
+            next();
+        }
     }
 
     return statement_tree;
@@ -437,10 +416,7 @@ ParseTree* CompilerParser::compileIf() {
 
     next(); // bug here
 
-    if (!have("keyword", "else")){
-        return if_tree;
-    }
-    else {
+    if (have("keyword", "else")){
         if_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
 
@@ -456,6 +432,7 @@ ParseTree* CompilerParser::compileIf() {
             throw ParseException();
         }
         if_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
     }
 
     return if_tree;

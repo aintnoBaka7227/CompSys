@@ -160,9 +160,9 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("symbol", ")"));          // closing parenthesis
     tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
     tokens.push_back(new Token("symbol", "}"));          // closing brace for if body
-    tokens.push_back(new Token("keyword", "else"));
-    tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
-    tokens.push_back(new Token("symbol", "}"));
+    // tokens.push_back(new Token("keyword", "else"));
+    // tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
+    // tokens.push_back(new Token("symbol", "}"));
     tokens.push_back(new Token("symbol", "}"));  // Closing function body
     tokens.push_back(new Token("symbol", "}"));  // Closing class body     
 
