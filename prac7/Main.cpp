@@ -17,16 +17,16 @@ int main(int argc, char *argv[]) {
     // tokens.push_back(new Token("identifier", "MyClass"));
     // tokens.push_back(new Token("symbol", "{"));
     // tokens.push_back(new Token("symbol", "}"));
-    // tokens.push_back(new Token("keyword", "class"));
-    // tokens.push_back(new Token("identifier", "MyClass"));
-    // tokens.push_back(new Token("symbol", "{"));
-    // tokens.push_back(new Token("keyword", "static"));
-    // tokens.push_back(new Token("keyword", "int"));
-    // tokens.push_back(new Token("identifier", "a"));
-    // tokens.push_back(new Token("symbol", ","));
-    // tokens.push_back(new Token("identifier", "b"));
-    // tokens.push_back(new Token("symbol", ";"));
-    // tokens.push_back(new Token("symbol", "}"));
+    tokens.push_back(new Token("keyword", "class"));
+    tokens.push_back(new Token("identifier", "MyClass"));
+    tokens.push_back(new Token("symbol", "{"));
+    tokens.push_back(new Token("keyword", "static"));
+    tokens.push_back(new Token("keyword", "int"));
+    tokens.push_back(new Token("identifier", "a"));
+    tokens.push_back(new Token("symbol", ","));
+    tokens.push_back(new Token("identifier", "b"));
+    tokens.push_back(new Token("symbol", ";"));
+    tokens.push_back(new Token("symbol", "}"));
     // tokens.push_back(new Token("keyword", "class"));        
     // tokens.push_back(new Token("identifier", "Main"));      
     // tokens.push_back(new Token("symbol", "{"));            
@@ -166,38 +166,38 @@ int main(int argc, char *argv[]) {
     // tokens.push_back(new Token("symbol", "}"));  // Closing function body
     // tokens.push_back(new Token("symbol", "}"));  // Closing class body 
 
-    tokens.push_back(new Token("keyword", "class"));
-        tokens.push_back(new Token("identifier", "MyClass"));
-        tokens.push_back(new Token("symbol", "{"));
+    // tokens.push_back(new Token("keyword", "class"));
+    //     tokens.push_back(new Token("identifier", "MyClass"));
+    //     tokens.push_back(new Token("symbol", "{"));
         
-        tokens.push_back(new Token("keyword", "function"));
-        tokens.push_back(new Token("keyword", "int"));
-        tokens.push_back(new Token("identifier", "new"));
-        tokens.push_back(new Token("symbol", "("));
-        tokens.push_back(new Token("symbol", ")"));
-        tokens.push_back(new Token("symbol", "{"));
+    //     tokens.push_back(new Token("keyword", "function"));
+    //     tokens.push_back(new Token("keyword", "int"));
+    //     tokens.push_back(new Token("identifier", "new"));
+    //     tokens.push_back(new Token("symbol", "("));
+    //     tokens.push_back(new Token("symbol", ")"));
+    //     tokens.push_back(new Token("symbol", "{"));
         
-        tokens.push_back(new Token("keyword", "if"));       // if statement
-        tokens.push_back(new Token("symbol", "("));          // opening parenthesis
-        tokens.push_back(new Token("symbol", "("));           // (
-        tokens.push_back(new Token("identifier", "a"));       // a
-        tokens.push_back(new Token("symbol", "+"));           // +
-        tokens.push_back(new Token("symbol", "("));           // (
-        tokens.push_back(new Token("integerConstant", "1"));  // 1
-        tokens.push_back(new Token("symbol", "-"));           // -
-        tokens.push_back(new Token("identifier", "c"));       // c
-        tokens.push_back(new Token("symbol", ")"));           // )
-        tokens.push_back(new Token("symbol", ">"));           // >
-        tokens.push_back(new Token("integerConstant", "5"));  // 5
-        tokens.push_back(new Token("symbol", ")"));           // )
-        tokens.push_back(new Token("symbol", "="));           // =
-        tokens.push_back(new Token("keyword", "true"));       // true
-        tokens.push_back(new Token("symbol", ")"));
-        tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
-        tokens.push_back(new Token("symbol", "}"));          // closing brace for if body
+    //     tokens.push_back(new Token("keyword", "if"));       // if statement
+    //     tokens.push_back(new Token("symbol", "("));          // opening parenthesis
+    //     tokens.push_back(new Token("symbol", "("));           // (
+    //     tokens.push_back(new Token("identifier", "a"));       // a
+    //     tokens.push_back(new Token("symbol", "+"));           // +
+    //     tokens.push_back(new Token("symbol", "("));           // (
+    //     tokens.push_back(new Token("integerConstant", "1"));  // 1
+    //     tokens.push_back(new Token("symbol", "-"));           // -
+    //     tokens.push_back(new Token("identifier", "c"));       // c
+    //     tokens.push_back(new Token("symbol", ")"));           // )
+    //     tokens.push_back(new Token("symbol", ">"));           // >
+    //     tokens.push_back(new Token("integerConstant", "5"));  // 5
+    //     tokens.push_back(new Token("symbol", ")"));           // )
+    //     tokens.push_back(new Token("symbol", "="));           // =
+    //     tokens.push_back(new Token("keyword", "true"));       // true
+    //     tokens.push_back(new Token("symbol", ")"));
+    //     tokens.push_back(new Token("symbol", "{"));          // opening brace for if body
+    //     tokens.push_back(new Token("symbol", "}"));          // closing brace for if body
 
-        tokens.push_back(new Token("symbol", "}"));  // Closing function body
-        tokens.push_back(new Token("symbol", "}"));  // Closing class body // Closing class body 
+    //     tokens.push_back(new Token("symbol", "}"));  // Closing function body
+    //     tokens.push_back(new Token("symbol", "}"));  // Closing class body // Closing class body 
 
 
     try {
