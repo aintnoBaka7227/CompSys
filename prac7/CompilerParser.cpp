@@ -158,15 +158,6 @@ ParseTree* CompilerParser::compileSubroutineBody() {
 
     subroutine_body_tree->addChild(mustBe("symbol", "{"));
 
-    // while(current_itr != tokens.end() && !have("symbol", "}")) {
-    //     if (have("keyword", "var")){
-    //         subroutine_body_tree->addChild(compileVarDec());
-    //         continue;
-    //     }
-    //     subroutine_body_tree->addChild(compileStatements());
-    // }
-
-    
     while (have("keyword", "var")) {
         subroutine_body_tree->addChild(compileVarDec());
     }
@@ -186,11 +177,6 @@ ParseTree* CompilerParser::compileVarDec() {
     ParseTree* local_var_tree = new ParseTree("varDec", "");
     local_var_tree->addChild(mustBe("keyword", "var"));
 
-    // if (!have("keyword", "int char boolean") && current()->getType() != "identifier"){
-    //     throw ParseException();
-    // }
-    // local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    // next();
     if (have("keyword", "int char boolean")) {
         std::string type = current()->getValue();
         local_var_tree->addChild(mustBe("keyword", type));
@@ -308,7 +294,9 @@ ParseTree* CompilerParser::compileIf() {
 
     if_tree->addChild(mustBe("symbol", "("));
 
-    if_tree->addChild(compileExpression());
+    if (!have("symbol", ")")) {
+        if_tree->addChild(compileExpression());
+    }
 
     if_tree->addChild(mustBe("symbol", ")"));
 
@@ -562,9 +550,7 @@ Token* CompilerParser::current(){
     if (current_itr != tokens.end()) {
         return *current_itr;
     }
-    else {
-        throw ParseException();
-    }
+    else return nullptr;
 }
 
 /**
