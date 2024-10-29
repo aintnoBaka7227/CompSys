@@ -326,20 +326,25 @@ ParseTree* CompilerParser::compileStatements() {
     //     }
     // }
 
-    while(have("keyword", "let")){
+    while(have("keyword", "let")&& current_itr != tokens.end() && !have("symbol", "}")){
         statement_tree->addChild(compileLet());
+        next();
     }
-    while(have("keyword", "if")){
+    while(have("keyword", "if")&& current_itr != tokens.end() && !have("symbol", "}")){
         statement_tree->addChild(compileIf());
+        next();
     }
-    while(have("keyword", "while")){
+    while(have("keyword", "while")&& current_itr != tokens.end() && !have("symbol", "}")){
         statement_tree->addChild(compileWhile());
+        next();
     }
-    while(have("keyword", "do")){
+    while(have("keyword", "do")&& current_itr != tokens.end() && !have("symbol", "}")){
         statement_tree->addChild(compileDo());
+        next();
     }
-    while(have("keyword", "return")){
+    while(have("keyword", "return")&& current_itr != tokens.end() && !have("symbol", "}")){
         statement_tree->addChild(compileReturn());
+        next();
     }
 
     return statement_tree;
