@@ -75,7 +75,7 @@ ParseTree* CompilerParser::compileClassVarDec() {
     var_tree->addChild(mustBe("keyword", type));
 
     std::string var_name = current()->getValue();
-    var_tree->addChild(mustBe("identifier", "var_name"));
+    var_tree->addChild(mustBe("identifier", var_name));
 
     while (current_itr != tokens.end() && have("symbol", ",")){
         
