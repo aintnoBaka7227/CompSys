@@ -18,7 +18,7 @@ CompilerParser::CompilerParser(std::list<Token*> tokens) {
  */
 ParseTree* CompilerParser::compileProgram() {
     if (tokens.size() == 0) {
-        throw ParseException();
+        return NULL;
     }
     if (have("keyword", "class")) {
             return compileClass();
@@ -428,9 +428,15 @@ ParseTree* CompilerParser::compileExpression() {
 ParseTree* CompilerParser::compileTerm() {
     ParseTree* term_tree = new ParseTree("term", "");
 
-    if(current()->getType() == "integerConstant" || current()->getType() == "stringConstant"){
+    if(current()->getType() == "integerConstant"){
         std::string value = current()->getValue();
         term_tree->addChild(mustBe("integerConstant", value));
+        return term_tree;
+    }
+
+    if (current()->getType() == "stringConstant") {
+        std::string value = current()->getValue();
+        term_tree->addChild(mustBe("stringConstant", value));
         return term_tree;
     }
 
@@ -528,7 +534,7 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
-    count++;
+    this->count++;
 }
 
 /**
@@ -550,15 +556,15 @@ Token* CompilerParser::current(){
  * @return true if a match, false otherwise
  */
 bool CompilerParser::have(std::string expectedType, std::string expectedValue){
-    if(current()->getType() == expectedType && current()->getValue() == expectedValue) {
-        return true;
-    } 
-    else if (current()->getType() == expectedType && expectedValue.find(current()->getValue()) != std::string::npos) {
-        return true;
+    if (current() != NULL) {
+        if(current()->getType() == expectedType && current()->getValue() == expectedValue) {
+            return true;
+        } 
+        else if (current()->getType() == expectedType && expectedValue.find(current()->getValue()) != std::string::npos) {
+            return true;
+        }
     }
-    else {
-        return false;
-    }
+    return false;
 }
 
 /**
