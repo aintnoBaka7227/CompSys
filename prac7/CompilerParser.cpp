@@ -8,7 +8,7 @@ using namespace std;
  */
 CompilerParser::CompilerParser(std::list<Token*> tokens) {
     this->tokens = tokens;
-    this->current_itr = this->tokens.begin();
+    //this->current_itr = this->tokens.begin();
     count = 0;
 }
 
@@ -43,7 +43,7 @@ ParseTree* CompilerParser::compileClass() {
 
     class_tree->addChild(mustBe("symbol", "{"));
 
-    while (current_itr != tokens.end() && !have("symbol", "}")) {
+    while (!have("symbol", "}")) {
         if (have("keyword", "function method constructor")){
             class_tree->addChild(compileSubroutine());
         }
@@ -63,6 +63,7 @@ ParseTree* CompilerParser::compileClass() {
  */
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* var_tree = new ParseTree("classVarDec","");
+
     std::string value = current()->getValue();
     var_tree->addChild(mustBe("keyword", value));
 
@@ -72,7 +73,7 @@ ParseTree* CompilerParser::compileClassVarDec() {
     std::string var_name = current()->getValue();
     var_tree->addChild(mustBe("identifier", var_name));
 
-    while (current_itr != tokens.end() && have("symbol", ",")){
+    while (have("symbol", ",")){
         
         var_tree->addChild(mustBe("symbol", ","));
         
@@ -92,14 +93,19 @@ ParseTree* CompilerParser::compileClassVarDec() {
  */
 ParseTree* CompilerParser::compileSubroutine() {
     ParseTree* routine_tree = new ParseTree("subroutine", "");
-    routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
 
-    if (!have("keyword", "int char boolean void") && current()->getType() != "identifier") {
-        throw ParseException();
+    std::string subroutine_method = current()->getValue();
+    routine_tree->addChild(mustBe("keyword", subroutine_method));
+
+
+    if (have("keyword", "int char boolean void")) {
+        std::string return_type = current()->getValue();
+        routine_tree->addChild(mustBe("keyword", return_type));
     }
-    routine_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    else if (current()->getType() == "identifier") {
+        std::string return_type = current()->getValue();
+        routine_tree->addChild(mustBe("identifier", return_type));
+    }
 
     std::string sub_name = current()->getValue();
     routine_tree->addChild(mustBe("identifier", sub_name));
@@ -124,27 +130,32 @@ ParseTree* CompilerParser::compileSubroutine() {
 ParseTree* CompilerParser::compileParameterList() {
     ParseTree* para_list_tree = new ParseTree("parameterList", "");
 
-    if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
-        throw ParseException();
+    if (have("keyword", "int char boolean")) {
+        std::string type = current()->getValue();
+        para_list_tree->addChild(mustBe("keyword", type));
     }
-    para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    else if (current()->getType() == "identifier") {
+        std::string type = current()->getValue();
+        para_list_tree->addChild(mustBe("identifier", type));
+    }
 
     std::string var_name = current()->getValue();
     para_list_tree->addChild(mustBe("identifier", var_name));
 
-    while (current_itr != tokens.end() && have("symbol",",")) {
-        para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
+    while (have("symbol",",")) {
+        para_list_tree->addChild(mustBe("symbol", ","));
 
-        if (!have("keyword", "int char boolean") && current()->getType() != "identifier") {
-            throw ParseException();
+        if (have("keyword", "int char boolean")) {
+            std::string type = current()->getValue();
+            para_list_tree->addChild(mustBe("keyword", type));
         }
-        para_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
+        else if (current()->getType() == "identifier") {
+            std::string type = current()->getValue();
+            para_list_tree->addChild(mustBe("identifier", type));
+        }
 
-        std::string new_var_name = current()->getValue();
-        para_list_tree->addChild(mustBe("identifier", new_var_name));
+        var_name = current()->getValue();
+        para_list_tree->addChild(mustBe("identifier", var_name));
     }
     return para_list_tree;
 }
@@ -208,7 +219,7 @@ ParseTree* CompilerParser::compileVarDec() {
 ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
-    while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
+    while (!have("symbol", "}") && have("keyword", "let if while do return")) {
         if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
             
@@ -228,22 +239,6 @@ ParseTree* CompilerParser::compileStatements() {
             statement_tree->addChild(compileReturn());
         }
     }
-
-    // while(have("keyword", "let")){
-    //     statement_tree->addChild(compileLet());
-    // }
-    // while(have("keyword", "if")){
-    //     statement_tree->addChild(compileIf());
-    // }
-    // while(have("keyword", "while")){
-    //     statement_tree->addChild(compileWhile());
-    // }
-    // while(have("keyword", "do")){
-    //     statement_tree->addChild(compileDo());
-    // }
-    // while(have("keyword", "return")){
-    //     statement_tree->addChild(compileReturn());
-    // }
 
     return statement_tree;
 }
@@ -408,7 +403,7 @@ ParseTree* CompilerParser::compileExpression() {
     expression_tree->addChild(compileTerm());
 
     std::string op;
-    if(current() != nullptr){
+    if(current() != NULL){
         op = current()->getValue();
     }
 
@@ -417,7 +412,7 @@ ParseTree* CompilerParser::compileExpression() {
 
         expression_tree->addChild(compileTerm());
 
-        if(current() == nullptr || current()->getValue() == "]" || current()->getValue() == ")"){
+        if(current() == NULL || current()->getValue() == "]" || current()->getValue() == ")"){
             break;
         }
         op = current()->getValue();
@@ -510,7 +505,7 @@ ParseTree* CompilerParser::compileTerm() {
 ParseTree* CompilerParser::compileExpressionList() {
     ParseTree* expr_list_tree = new ParseTree("expressionList", "");
 
-    if (current_itr != tokens.end() || current()->getValue() != ")") {
+    if (current() != NULL || current()->getValue() != ")") {
         expr_list_tree->addChild(compileExpression());
     } else {
         return expr_list_tree;
@@ -521,7 +516,7 @@ ParseTree* CompilerParser::compileExpressionList() {
 
         expr_list_tree->addChild(compileExpression());
 
-        if (current_itr == tokens.end()) {
+        if (current() == NULL) {
             break;
         }
     }
@@ -533,13 +528,7 @@ ParseTree* CompilerParser::compileExpressionList() {
  * Advance to the next token
  */
 void CompilerParser::next(){
-    if (current_itr != tokens.end()) {
-        ++current_itr;
-        count++;
-    }
-    else {
-        throw ParseException();
-    }
+    count++;
 }
 
 /**
@@ -547,10 +536,13 @@ void CompilerParser::next(){
  * @return the Token
  */
 Token* CompilerParser::current(){
-    if (current_itr != tokens.end()) {
-        return *current_itr;
+    Token* current_token = NULL;
+    if (this->count < this->tokens.size()) {
+        std::list<Token*>::iterator current_itr = tokens.begin();
+        std::advance(current_itr, this->count);
+        current_token = *current_itr;
     }
-    else return nullptr;
+    return current_token;
 }
 
 /**
