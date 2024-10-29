@@ -547,20 +547,18 @@ ParseTree* CompilerParser::compileExpression() {
         return expression_tree;
     }
 
-    while (current_itr != tokens.end()) {
-        if (have("symbol", "+-*/&|<>=")) {
-            expression_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-        }
-        else if(have("symbol", ")")) {
-            expression_tree->addChild(compileTerm());
-        }
-        else if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()-> getType() == "identifier" || current()->getType() == "keyword") {
-            expression_tree->addChild(compileTerm());
-        }
-        else break;
-    } 
+    expression_tree->addChild(compileTerm());
 
+    while (have("symbol", "+-*/&|<>=")) {
+        expression_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+
+        expression_tree->addChild(compileTerm()); 
+
+        if (current_itr == tokens.end() || current()->getValue() == ")" || current()->getValue() == "]") {
+            break;
+        }
+    }
     return expression_tree;
 }
 
@@ -570,6 +568,103 @@ ParseTree* CompilerParser::compileExpression() {
  */
 ParseTree* CompilerParser::compileTerm() {
     ParseTree* term_tree = new ParseTree("term", "");
+    // while (current_itr != tokens.end()) {
+    //     if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()-> getType() == "identifier" || current()->getType() == "keyword") {
+    //         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    //         next();
+    //     }
+    //     else if (have("symbol", ".")) {
+    //         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    //         next();
+
+    //         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    //         next();
+
+    //         if (!have("symbol", "(")) {
+    //             throw ParseException();
+    //         }
+    //         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    //         next();
+
+    //         term_tree->addChild(compileExpressionList());
+
+    //         if (!have("symbol", ")")){
+    //             throw ParseException();
+    //         }
+    //         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    //         next();
+    //     }
+    //     else {
+    //         break;
+    //     }
+    // }
+
+    if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()->getType() == "keyword") {
+        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+        return term_tree;
+    }
+
+    if (current()->getType() == "identifier") {
+        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+        
+        if (have("symbol", "[")) {
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
+
+            term_tree->addChild(compileExpression());
+
+            if (!have("symbol", "]")) {
+                throw ParseException();
+            }
+
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
+        }
+
+        if (have("symbol", "(") || have("symbol", ".")) {
+            if (have("symbol", "(")) {
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+
+                term_tree->addChild(compileExpressionList());
+
+                if (!have("symbol", ")")) {
+                    throw ParseException();
+                }
+
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+            }
+            else {
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+                
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+
+                if (!have("symbol", "(")) {
+                    throw ParseException();
+                }
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+
+                term_tree->addChild(compileExpressionList());
+
+                if (!have("symbol", ")")) {
+                    throw ParseException();
+                }
+
+                term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+                next();
+
+            }
+            return term_tree;
+        }
+
+        return term_tree;
+    }
 
     if (have("symbol", "(")) {
         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
@@ -587,35 +682,11 @@ ParseTree* CompilerParser::compileTerm() {
         return term_tree;
     }
 
-    while (current_itr != tokens.end()) {
-        if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()-> getType() == "identifier" || current()->getType() == "keyword") {
-            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-        }
-        else if (have("symbol", ".")) {
-            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-
-            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-
-            if (!have("symbol", "(")) {
-                throw ParseException();
-            }
-            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-
-            term_tree->addChild(compileExpressionList());
-
-            if (!have("symbol", ")")){
-                throw ParseException();
-            }
-            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next();
-        }
-        else {
-            break;
-        }
+    if(have("symbol", "-") || have("symbol", "~")){
+        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+        term_tree->addChild(compileTerm());
+        return term_tree;
     }
 
     return term_tree;
@@ -628,13 +699,20 @@ ParseTree* CompilerParser::compileTerm() {
 ParseTree* CompilerParser::compileExpressionList() {
     ParseTree* expr_list_tree = new ParseTree("expressionList", "");
 
-    while(current_itr != tokens.end() && !have("symbol", ")")) {
-        if (have("symbol", ",")) {
-            expr_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-            next ();
-        }
-        else {
-            expr_list_tree->addChild(compileExpression());
+    if (current_itr != tokens.end() || current()->getValue() != ")") {
+        expr_list_tree->addChild(compileExpression());
+    } else {
+        return expr_list_tree;
+    }
+
+    while (current()->getValue() == ",") {
+        expr_list_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
+
+        expr_list_tree->addChild(compileExpression());
+
+        if (current_itr == tokens.end()) {
+            break;
         }
     }
 
