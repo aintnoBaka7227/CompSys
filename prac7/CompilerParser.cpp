@@ -416,14 +416,6 @@ ParseTree* CompilerParser::compileIf() {
 
     next(); // bug here
 
-    // auto it = tokens.begin();
-    // std::advance(it, count);
-    // Token* pos = *it;
-    // if (pos->getType() != "keyword" && pos->getValue() != "else") {
-    //     --current_itr;
-    //     return if_tree;
-    // }
-
     if (!have("keyword", "else")){
         return if_tree;
     }
@@ -552,6 +544,7 @@ ParseTree* CompilerParser::compileExpression() {
     if (have("keyword", "skip")) {
         expression_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
+        return expression_tree;
     }
 
     while (current_itr != tokens.end()) {
@@ -614,7 +607,7 @@ ParseTree* CompilerParser::compileTerm() {
         term_tree->addChild(compileExpressionList());
 
         if (!have("symbol", ")")){
-                throw ParseException();
+            throw ParseException();
         }
         term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
         next();
