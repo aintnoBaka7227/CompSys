@@ -587,30 +587,35 @@ ParseTree* CompilerParser::compileTerm() {
         return term_tree;
     }
 
-    if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()-> getType() == "identifier" || current()->getType() == "keyword") {
-        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
-    }
-    else if (have("symbol", ".")) {
-        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
-
-        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
-
-        if (!have("symbol", "(")) {
-            throw ParseException();
+    while (current_itr != tokens.end()) {
+        if (current()-> getType() == "intergerConstant" || current()-> getType() == "stringConstant" || current()-> getType() == "identifier" || current()->getType() == "keyword") {
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
         }
-        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
+        else if (have("symbol", ".")) {
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
 
-        term_tree->addChild(compileExpressionList());
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
 
-        if (!have("symbol", ")")){
-            throw ParseException();
+            if (!have("symbol", "(")) {
+                throw ParseException();
+            }
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
+
+            term_tree->addChild(compileExpressionList());
+
+            if (!have("symbol", ")")){
+                throw ParseException();
+            }
+            term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+            next();
         }
-        term_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-        next();
+        else {
+            break;
+        }
     }
 
     return term_tree;
