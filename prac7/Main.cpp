@@ -96,12 +96,12 @@ int main(int argc, char *argv[]) {
     tokens.push_back(new Token("keyword", "skip"));
     tokens.push_back(new Token("symbol", ";"));
 
-    // tokens.push_back(new Token("keyword", "do"));
-    // tokens.push_back(new Token("keyword", "skip"));
-    // tokens.push_back(new Token("symbol", ";"));
+    tokens.push_back(new Token("keyword", "do"));
+    tokens.push_back(new Token("keyword", "skip"));
+    tokens.push_back(new Token("symbol", ";"));
 
-    // tokens.push_back(new Token("keyword", "return"));
-    // tokens.push_back(new Token("symbol", ";"));
+    tokens.push_back(new Token("keyword", "return"));
+    tokens.push_back(new Token("symbol", ";"));
 
     tokens.push_back(new Token("symbol", "}")); 
     tokens.push_back(new Token("symbol", "}")); 

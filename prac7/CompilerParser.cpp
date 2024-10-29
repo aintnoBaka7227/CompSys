@@ -191,8 +191,14 @@ ParseTree* CompilerParser::compileVarDec() {
     // }
     // local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
     // next();
-    std::string type = current()->getValue();
-    local_var_tree->addChild(mustBe("keyword", type));
+    if (have("keyword", "int char boolean")) {
+        std::string type = current()->getValue();
+        local_var_tree->addChild(mustBe("keyword", type));
+    }
+    else if (current()->getType() == "identifier"){
+        std::string object_name = current()->getValue();
+        local_var_tree->addChild(mustBe("identifier", object_name));
+    }
 
     std::string local_var_name = current()->getValue();
     local_var_tree->addChild(mustBe("identifier", local_var_name));
@@ -216,42 +222,42 @@ ParseTree* CompilerParser::compileVarDec() {
 ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
-    // while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
-    //     if (current()->getValue() == "let"){
-    //         statement_tree->addChild(compileLet());
+    while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
+        if (current()->getValue() == "let"){
+            statement_tree->addChild(compileLet());
             
-    //     }
-    //     else if (current()->getValue() == "if"){
-    //         statement_tree->addChild(compileIf());
+        }
+        else if (current()->getValue() == "if"){
+            statement_tree->addChild(compileIf());
             
-    //     }
-    //     else if (current()->getValue() == "while"){
-    //         statement_tree->addChild(compileWhile());
+        }
+        else if (current()->getValue() == "while"){
+            statement_tree->addChild(compileWhile());
             
-    //     }
-    //     else if (current()->getValue() == "do"){
-    //         statement_tree->addChild(compileDo());
-    //     }
-    //     else if (current()->getValue() == "return"){
-    //         statement_tree->addChild(compileReturn());
-    //     }
-    // }
+        }
+        else if (current()->getValue() == "do"){
+            statement_tree->addChild(compileDo());
+        }
+        else if (current()->getValue() == "return"){
+            statement_tree->addChild(compileReturn());
+        }
+    }
 
-    while(have("keyword", "let")){
-        statement_tree->addChild(compileLet());
-    }
-    while(have("keyword", "if")){
-        statement_tree->addChild(compileIf());
-    }
-    while(have("keyword", "while")){
-        statement_tree->addChild(compileWhile());
-    }
-    while(have("keyword", "do")){
-        statement_tree->addChild(compileDo());
-    }
-    while(have("keyword", "return")){
-        statement_tree->addChild(compileReturn());
-    }
+    // while(have("keyword", "let")){
+    //     statement_tree->addChild(compileLet());
+    // }
+    // while(have("keyword", "if")){
+    //     statement_tree->addChild(compileIf());
+    // }
+    // while(have("keyword", "while")){
+    //     statement_tree->addChild(compileWhile());
+    // }
+    // while(have("keyword", "do")){
+    //     statement_tree->addChild(compileDo());
+    // }
+    // while(have("keyword", "return")){
+    //     statement_tree->addChild(compileReturn());
+    // }
 
     return statement_tree;
 }
