@@ -50,9 +50,6 @@ ParseTree* CompilerParser::compileClass() {
         else if (have("keyword", "static field")){
             class_tree->addChild(compileClassVarDec());
         }
-        else {
-            throw ParseException();
-        }
     }
 
     class_tree->addChild(mustBe("symbol", "}"));
@@ -66,14 +63,16 @@ ParseTree* CompilerParser::compileClass() {
  */
 ParseTree* CompilerParser::compileClassVarDec() {
     ParseTree* var_tree = new ParseTree("classVarDec","");
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    std::string value = current()->getValue();
+    var_tree->addChild(mustBe("keyword", value));
 
-    if (!have("keyword", "int char boolean")){
-        throw ParseException();
-    }
-    var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    // if (!have("keyword", "int char boolean")){
+    //     throw ParseException();
+    // }
+    // var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    // next();
+    std::string type = current()->getValue();
+    var_tree->addChild(mustBe("keyword", type));
 
     std::string var_name = current()->getValue();
     var_tree->addChild(mustBe("identifier", "var_name"));
