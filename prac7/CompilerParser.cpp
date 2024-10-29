@@ -401,14 +401,14 @@ ParseTree* CompilerParser::compileExpression() {
 
     expression_tree->addChild(compileTerm());
 
-    std::string op = current()->getValue();
-
-    while (current() != NULL && !have("symbol", "] )") && have("symbol", "+-*/&|<>=")){
+    while (have("symbol", "+-*/&|<>=")){
+        std::string op = current()->getValue();
         expression_tree->addChild(mustBe("symbol", op));
 
         expression_tree->addChild(compileTerm());
-        
-        op = current()->getValue();
+
+        if(!current() || have("symbol", ") ]")) break;
+
     }
     return expression_tree;
 }
@@ -424,6 +424,7 @@ ParseTree* CompilerParser::compileTerm() {
     if(current()->getType() == "integerConstant" || current()->getType() == "stringConstant" || current()->getType() == "keyword"){
         std::string value = current()->getValue();
         std::string type = current()->getType();
+       //term_tree->addChild(mustBe("integerConstant", value));
         term_tree->addChild(mustBe(type, value));
         return term_tree;
     }
@@ -440,25 +441,26 @@ ParseTree* CompilerParser::compileTerm() {
             term_tree->addChild(mustBe("symbol", "]"));
         }
 
-        if(have("symbol", "(")){
-            term_tree->addChild(mustBe("symbol", "("));
+        if(have("symbol", "(") || have("symbol", ".")){
+            if(have("symbol", "(")){
+                term_tree->addChild(mustBe("symbol", "("));
 
-            term_tree->addChild(compileExpressionList());
+                term_tree->addChild(compileExpressionList());
 
-            term_tree->addChild(mustBe("symbol", ")"));
-            return term_tree;
-        }
-        else if (have("symbol", ".")){
-            term_tree->addChild(mustBe("symbol", "."));
+                term_tree->addChild(mustBe("symbol", ")"));
+            }
+            else{
+                term_tree->addChild(mustBe("symbol", "."));
 
-            std::string subrou = current()->getValue();
-            term_tree->addChild(mustBe("identifier", subrou));
+                std::string subrou = current()->getValue();
+                term_tree->addChild(mustBe("identifier", subrou));
 
-            term_tree->addChild(mustBe("symbol", "("));
+                term_tree->addChild(mustBe("symbol", "("));
 
-            term_tree->addChild(compileExpressionList());
+                term_tree->addChild(compileExpressionList());
                 
-            term_tree->addChild(mustBe("symbol", ")"));
+                term_tree->addChild(mustBe("symbol", ")"));
+            }
             return term_tree;
         }
         return term_tree;
@@ -491,16 +493,18 @@ ParseTree* CompilerParser::compileTerm() {
 ParseTree* CompilerParser::compileExpressionList() {
     ParseTree* expr_list_tree = new ParseTree("expressionList", "");
 
-    if (current() != NULL || current()->getValue() != ")") {
+    if (current() || current()->getValue() != ")") {
         expr_list_tree->addChild(compileExpression());
     } else {
         return expr_list_tree;
     }
 
-    while (current() != NULL && current()->getValue() == ",") {
+    while (current()->getValue() == ",") {
         expr_list_tree->addChild(mustBe("symbol", ","));
 
         expr_list_tree->addChild(compileExpression());
+
+        if (!current()) break;
     }
 
     return expr_list_tree;
