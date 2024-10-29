@@ -272,58 +272,74 @@ ParseTree* CompilerParser::compileStatements() {
     ParseTree* statement_tree = new ParseTree("statements", "");
 
     // while(have("keyword", "let if while do return")) {
-    if(have("keyword", "let if while do return")) {
-        if (current()->getValue() == "let"){
-            statement_tree->addChild(compileLet());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "if"){
-            statement_tree->addChild(compileIf());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "while"){
-            statement_tree->addChild(compileWhile());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "do"){
-            statement_tree->addChild(compileDo());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "return"){
-            statement_tree->addChild(compileReturn());
-            next();
-        }
-    }
+    // if(have("keyword", "let if while do return")) {
+    //     if (current()->getValue() == "let"){
+    //         statement_tree->addChild(compileLet());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "if"){
+    //         statement_tree->addChild(compileIf());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "while"){
+    //         statement_tree->addChild(compileWhile());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "do"){
+    //         statement_tree->addChild(compileDo());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "return"){
+    //         statement_tree->addChild(compileReturn());
+    //         next();
+    //     }
+    // }
 
-    while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
-        if (current()->getValue() == "let"){
-            statement_tree->addChild(compileLet());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "if"){
-            statement_tree->addChild(compileIf());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "while"){
-            statement_tree->addChild(compileWhile());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "do"){
-            statement_tree->addChild(compileDo());
-            next();
-            //continue;
-        }
-        else if (current()->getValue() == "return"){
-            statement_tree->addChild(compileReturn());
-            next();
-        }
+    // while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
+    //     if (current()->getValue() == "let"){
+    //         statement_tree->addChild(compileLet());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "if"){
+    //         statement_tree->addChild(compileIf());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "while"){
+    //         statement_tree->addChild(compileWhile());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "do"){
+    //         statement_tree->addChild(compileDo());
+    //         next();
+    //         //continue;
+    //     }
+    //     else if (current()->getValue() == "return"){
+    //         statement_tree->addChild(compileReturn());
+    //         next();
+    //     }
+    // }
+
+    while(have("keyword", "let")){
+        statement_tree->addChild(compileLet());
+    }
+    while(have("keyword", "if")){
+        statement_tree->addChild(compileIf());
+    }
+    while(have("keyword", "while")){
+        statement_tree->addChild(compileWhile());
+    }
+    while(have("keyword", "do")){
+        statement_tree->addChild(compileDo());
+    }
+    while(have("keyword", "return")){
+        statement_tree->addChild(compileReturn());
     }
 
     return statement_tree;
