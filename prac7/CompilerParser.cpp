@@ -112,10 +112,6 @@ ParseTree* CompilerParser::compileSubroutine() {
 
     routine_tree->addChild(mustBe("symbol", ")"));
 
-    if (!have("symbol", "{")) {
-        throw ParseException();
-    }
-
     routine_tree->addChild(compileSubroutineBody());
 
     return routine_tree;
@@ -160,8 +156,7 @@ ParseTree* CompilerParser::compileParameterList() {
 ParseTree* CompilerParser::compileSubroutineBody() {
     ParseTree* subroutine_body_tree = new ParseTree("subroutineBody", "");
 
-    subroutine_body_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    subroutine_body_tree->addChild(mustBe("symbol", "{"));
 
     // while(current_itr != tokens.end() && !have("symbol", "}")) {
     //     if (have("keyword", "var")){
@@ -189,23 +184,24 @@ ParseTree* CompilerParser::compileSubroutineBody() {
  */
 ParseTree* CompilerParser::compileVarDec() {
     ParseTree* local_var_tree = new ParseTree("varDec", "");
-    local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    local_var_tree->addChild(mustBe("keyword", "var"));
 
-    if (!have("keyword", "int char boolean") && current()->getType() != "identifier"){
-        throw ParseException();
-    }
-    local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
-    next();
+    // if (!have("keyword", "int char boolean") && current()->getType() != "identifier"){
+    //     throw ParseException();
+    // }
+    // local_var_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    // next();
+    std::string type = current()->getValue();
+    local_var_tree->addChild(mustBe("keyword", type));
 
     std::string local_var_name = current()->getValue();
     local_var_tree->addChild(mustBe("identifier", local_var_name));
 
-    while (current_itr != tokens.end() && have("symbol", ",")){
+    while (!have("symbol", ";")){
         local_var_tree->addChild(mustBe("symbol", ","));
 
-        std::string new_local_var_name = current()->getValue();
-        local_var_tree->addChild(mustBe("identifier", new_local_var_name));
+        local_var_name = current()->getValue();
+        local_var_tree->addChild(mustBe("identifier", local_var_name));
     }
 
     local_var_tree->addChild(mustBe("symbol", ";"));
