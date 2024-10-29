@@ -302,27 +302,26 @@ ParseTree* CompilerParser::compileStatements() {
     while (current_itr != tokens.end() && !have("symbol", "}") && have("keyword", "let if while do return")) {
         if (current()->getValue() == "let"){
             statement_tree->addChild(compileLet());
-            next();
+            // next();
             //continue;
         }
         else if (current()->getValue() == "if"){
             statement_tree->addChild(compileIf());
-
             //continue;
         }
         else if (current()->getValue() == "while"){
             statement_tree->addChild(compileWhile());
-            next();
+            // next();
             //continue;
         }
         else if (current()->getValue() == "do"){
             statement_tree->addChild(compileDo());
-            next();
+            // next();
             //continue;
         }
         else if (current()->getValue() == "return"){
             statement_tree->addChild(compileReturn());
-            next();
+            // next();
         }
     }
 
@@ -370,6 +369,7 @@ ParseTree* CompilerParser::compileLet() {
         throw ParseException();
     }
     let_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
 
     return let_tree;
 }
@@ -477,6 +477,7 @@ ParseTree* CompilerParser::compileWhile() {
         throw ParseException();
     }
     while_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
 
     return while_tree;
 }
@@ -500,6 +501,7 @@ ParseTree* CompilerParser::compileDo() {
         throw ParseException();
     }
     do_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+    next();
 
     return do_tree;
 }
@@ -519,6 +521,7 @@ ParseTree* CompilerParser::compileReturn() {
 
     if (have("symbol", ";")){
         return_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
         return return_tree;
     }
     else {
@@ -528,6 +531,7 @@ ParseTree* CompilerParser::compileReturn() {
             throw ParseException();
         }
         return_tree->addChild(new ParseTree(current()->getType(), current()->getValue()));
+        next();
     }   
     return return_tree;
 }
